@@ -43,7 +43,7 @@ public class UtilityPanel extends JPanel {
             this.add(playlistNameField);
             this.add(addPlaylist);
 
-            Profile p = ContentPanel.getInstance().getProfile();
+            Profile p = ContentPanel.getProfile();
             addPlaylist.addActionListener(evt -> p.addPlaylist(playlistNameField.getText()));
         }
     }
