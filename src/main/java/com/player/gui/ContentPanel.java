@@ -1,5 +1,6 @@
 package com.player.gui;
 
+import com.player.Profile;
 import com.player.gui.panels.selection.PlaylistSelectionPanel;
 import com.player.gui.panels.view.playlist.PlaylistViewPanel;
 import com.player.gui.panels.view.song.SongViewPanel;
@@ -8,6 +9,7 @@ import javax.swing.*;
 
 public class ContentPanel extends JPanel {
     private static ContentPanel instance = null;
+    private Profile profile;
 
     private final PlaylistSelectionPanel psp;
     private final PlaylistViewPanel pvp;
@@ -31,6 +33,10 @@ public class ContentPanel extends JPanel {
         this.add(svp);
     }
 
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
     public PlaylistSelectionPanel getPsp() {
         return psp;
     }
@@ -41,5 +47,9 @@ public class ContentPanel extends JPanel {
 
     public SongViewPanel getSvp() {
         return svp;
+    }
+
+    public Profile getProfile() {
+        return profile;
     }
 }

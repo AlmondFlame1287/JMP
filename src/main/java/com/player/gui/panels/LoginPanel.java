@@ -1,5 +1,6 @@
 package com.player.gui.panels;
 
+import com.player.Profile;
 import com.player.gui.ContentPanel;
 
 import javax.swing.*;
@@ -42,6 +43,9 @@ public class LoginPanel extends JPanel {
         constraints.gridwidth = 4;
         this.add(nameField, constraints);
 
+        // TODO: Remove on production
+        nameField.setText("Dio");
+
         constraints.gridy = 2;
         constraints.gridwidth = 1;
         this.add(done, constraints);
@@ -52,6 +56,7 @@ public class LoginPanel extends JPanel {
 
     private void onDonePressed() {
         // TODO: Load user
+        ContentPanel.getInstance().setProfile(new Profile(nameField.getText()));
         this.changePanel();
     }
 
