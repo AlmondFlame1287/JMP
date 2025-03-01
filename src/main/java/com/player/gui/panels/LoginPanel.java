@@ -55,14 +55,14 @@ public class LoginPanel extends JPanel {
     }
 
     private void onDonePressed() {
+        this.changePanel();
         ContentPanel.setProfile(new Profile(nameField.getText()));
         ContentPanel.getPsp().loadPlaylists();
-        this.changePanel();
+        parent.revalidate();
     }
 
     private void changePanel() {
         parent.setContentPane(ContentPanel.getInstance());
-        parent.revalidate();
     }
 
     @Override
