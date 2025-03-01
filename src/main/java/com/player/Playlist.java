@@ -11,6 +11,10 @@ public class Playlist {
     private List<Song> songs;
     private int songCount;
 
+    public Playlist(String name) {
+        this.name = name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
