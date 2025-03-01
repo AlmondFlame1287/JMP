@@ -4,6 +4,8 @@ import com.player.gui.panels.LoginPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import static com.player.utils.Constants.*;
 
@@ -16,6 +18,17 @@ public class MFrame extends JFrame {
         this.setupMenuBar();
         this.setContentPane(new LoginPanel(this));
         this.setVisible(true);
+        this.setupCloseEvent();
+    }
+
+    private void setupCloseEvent() {
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                ContentPanel.getProfile().savePlaylistToFile();
+                super.windowClosing(e);
+            }
+        });
     }
 
     private void setupMenuBar() {
