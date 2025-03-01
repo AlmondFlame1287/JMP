@@ -1,5 +1,7 @@
 package com.player.gui;
 
+import com.player.gui.panels.LoginPanel;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -12,7 +14,7 @@ public class MFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setupMenuBar();
-        this.setContentPane(ContentPanel.getInstance());
+        this.setContentPane(new LoginPanel(this));
         this.setVisible(true);
     }
 

@@ -8,8 +8,8 @@ public final class Constants {
     public static final String APP_VER = "0.0.1a";
     public static final String APP_NAME = "JMP " + APP_VER;
 
-    public static final int F_WIDTH = /*1920;*/ Toolkit.getDefaultToolkit().getScreenSize().width / 2;
-    public static final int F_HEIGHT = /*1080;*/ Toolkit.getDefaultToolkit().getScreenSize().height / 2;
+    public static final int F_WIDTH = 1920; // Toolkit.getDefaultToolkit().getScreenSize().width / 2;
+    public static final int F_HEIGHT = 1080; // Toolkit.getDefaultToolkit().getScreenSize().height / 2;
 
     public static final Path PLAYLIST_PATH = Paths.get(System.getProperty("user.home") + "/JMPPlaylists").normalize();
 
