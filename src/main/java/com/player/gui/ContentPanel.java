@@ -9,11 +9,11 @@ import javax.swing.*;
 
 public class ContentPanel extends JPanel {
     private static ContentPanel instance = null;
-    private Profile profile;
+    private static Profile profile;
 
-    private final PlaylistSelectionPanel psp;
-    private final PlaylistViewPanel pvp;
-    private final SongViewPanel svp;
+    private static PlaylistSelectionPanel psp;
+    private static PlaylistViewPanel pvp;
+    private static SongViewPanel svp;
 
     public static ContentPanel getInstance() {
         if(instance == null)
@@ -24,32 +24,32 @@ public class ContentPanel extends JPanel {
     private ContentPanel() {
         this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
-        this.psp = new PlaylistSelectionPanel();
-        this.pvp = new PlaylistViewPanel();
-        this.svp = new SongViewPanel();
+        psp = new PlaylistSelectionPanel();
+        pvp = new PlaylistViewPanel();
+        svp = new SongViewPanel();
 
         this.add(psp);
         this.add(pvp);
         this.add(svp);
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public static void setProfile(Profile profile) {
+        ContentPanel.profile = profile;
     }
 
-    public PlaylistSelectionPanel getPsp() {
+    public static PlaylistSelectionPanel getPsp() {
         return psp;
     }
 
-    public PlaylistViewPanel getPvp() {
+    public static PlaylistViewPanel getPvp() {
         return pvp;
     }
 
-    public SongViewPanel getSvp() {
+    public static SongViewPanel getSvp() {
         return svp;
     }
 
-    public Profile getProfile() {
+    public static Profile getProfile() {
         return profile;
     }
 }
