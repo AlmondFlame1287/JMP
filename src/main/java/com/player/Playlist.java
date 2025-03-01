@@ -1,5 +1,6 @@
 package com.player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Playlist {
@@ -8,11 +9,29 @@ public class Playlist {
 
     private String name;
     // private Image playlistImage;
-    private List<Song> songs;
-    private int songCount;
+    private final List<Song> songs;
+//    private int songCount;
+
+    public Playlist() {
+        this.songs = new ArrayList<>();
+    }
 
     public Playlist(String name) {
         this.name = name;
+        this.songs = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder(this.name + "=");
+        for(Song s : songs) {
+            str.append(s.getName())
+                    .append(":")
+                    .append(s.getSongPath())
+                    .append("|");
+        }
+
+        return str.toString();
     }
 
     public void setName(String name) {
@@ -29,11 +48,11 @@ public class Playlist {
     }
 
 
-    public List<Song> getSongs() {
-        return songs;
-    }
+//    public List<Song> getSongs() {
+//        return songs;
+//    }
 
-    public int getSongCount() {
-        return songCount;
-    }
+//    public int getSongCount() {
+//        return songCount;
+//    }
 }
