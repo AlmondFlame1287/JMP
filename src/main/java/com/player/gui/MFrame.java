@@ -12,7 +12,7 @@ public class MFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setupMenuBar();
-        this.setContentPane(new ContentPanel());
+        this.setContentPane(ContentPanel.getInstance());
         this.setVisible(true);
     }
 
@@ -22,6 +22,10 @@ public class MFrame extends JFrame {
         JMenu edit = new JMenu("Edit");
         JMenu view = new JMenu("View");
         JMenu preferences = new JMenu("Preferences");
+
+        // TODO: Implement sign-out
+        JMenuItem signOut = new JMenuItem("Sign out");
+        file.add(signOut);
 
         jmb.add(file);
         jmb.add(edit);

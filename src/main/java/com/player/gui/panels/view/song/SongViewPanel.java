@@ -1,4 +1,4 @@
-package com.player.gui.panels;
+package com.player.gui.panels.view.song;
 
 import javax.swing.*;
 
