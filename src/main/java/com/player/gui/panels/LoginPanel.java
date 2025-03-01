@@ -55,8 +55,8 @@ public class LoginPanel extends JPanel {
     }
 
     private void onDonePressed() {
-        // TODO: Load user
-        ContentPanel.getInstance().setProfile(new Profile(nameField.getText()));
+        ContentPanel.setProfile(new Profile(nameField.getText()));
+        ContentPanel.getPsp().loadPlaylists();
         this.changePanel();
     }
 
