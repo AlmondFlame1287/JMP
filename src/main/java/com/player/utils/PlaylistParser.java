@@ -10,7 +10,7 @@ public final class PlaylistParser {
     private PlaylistParser() {}
 
     public static Playlist parseString(String str) {
-        Pattern songPattern = Pattern.compile("([A-Za-z]+):([^|]+)");
+        Pattern songPattern = Pattern.compile("([A-Za-z]+),([^|]+)");
         Pattern playlistNamePattern = Pattern.compile("([^=]+)=");
 
         Matcher songMatcher = songPattern.matcher(str);

@@ -26,7 +26,7 @@ public class Playlist {
         StringBuilder str = new StringBuilder(this.name + "=");
         for(Song s : songs) {
             str.append(s.getName())
-                    .append(":")
+                    .append(",")
                     .append(s.getSongPath())
                     .append("|");
         }
