@@ -1,15 +1,16 @@
 package com.player;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public final class Song {
     private String name;
     // private Image songImage;
-    private String songPath;
+    private Path songPath;
 
     public Song(String name, String path) {
         this.name = name;
-        this.songPath = path; // TODO: Use paths instead of string in production
+        this.songPath = Paths.get(path); // TODO: Use paths instead of string in production
     }
 
     public Song(String name) {
@@ -20,15 +21,7 @@ public final class Song {
         return name;
     }
 
-    public String getSongPath() {
+    public Path getSongPath() {
         return songPath;
     }
-
-    //    public void setSongPath(Path songPath) {
-//        this.songPath = songPath;
-//    }
-//
-//    public Path getSongPath() {
-//        return songPath;
-//    }
 }
