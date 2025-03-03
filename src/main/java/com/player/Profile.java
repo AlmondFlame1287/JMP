@@ -4,6 +4,10 @@ package com.player;
 import com.player.gui.ContentPanel;
 import com.player.utils.PlaylistParser;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +17,7 @@ import static com.player.utils.Constants.PLAYLIST_PATH;
 public class Profile {
     private String name;
     private File profileFile;
-//    private Image profilePic;
+    private Image profilePic;
     private final List<Playlist> playlists;
 
     public Profile(String name) {
@@ -80,7 +84,13 @@ public class Profile {
         return playlists;
     }
 
-    //    public Image getProfilePic() {
-//        return profilePic;
-//    }
+    public Image getProfilePicture() {
+        // TODO: Remove hard coded profile pic
+        try {
+            return ImageIO.read(new File("C:\\Users\\deser\\Pictures\\VRChat\\2025-03\\VRChat_2025-03-02_22-28-38.204_2560x1440.png"));
+        } catch (IOException ioe) {
+            System.err.println("Something went wrong: " + ioe.getMessage());
+            return null;
+        }
+    }
 }
