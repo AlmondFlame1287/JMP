@@ -47,6 +47,9 @@ public class Playlist {
         this.songs.add(s);
     }
 
+    public Song getSongAt(int index) {
+        return songs.get(index);
+    }
 
 //    public List<Song> getSongs() {
 //        return songs;
