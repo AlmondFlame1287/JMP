@@ -1,20 +1,43 @@
 package com.player.gui.panels.selection;
 
+import com.player.Profile;
+import com.player.gui.CircularButton;
 import com.player.gui.ContentPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static com.player.utils.Constants.PROFILE_HEIGHT;
+import static com.player.utils.Constants.*;
+import static com.player.utils.Constants.F_HEIGHT;
 
 public class ProfilePanel extends JPanel {
     public ProfilePanel() {
         this.setBackground(Color.CYAN);
+        this.setPreferredSize(new Dimension(PSP_WIDTH, PROFILE_HEIGHT));
+        this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         this.setBorder(BorderFactory.createLoweredBevelBorder());
+
+        this.init();
+    }
+
+    private void init() {
+        Profile p = ContentPanel.getProfile();
+        JLabel profileName = new JLabel(p.getName());
+        CircularButton profilePfp = new CircularButton(p.getProfilePicture()) {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(50, ProfilePanel.this.getHeight());
+            }
+        };
+
+        this.add(profilePfp);
+        this.add(profileName);
+
+        profilePfp.addActionListener(evt -> System.out.println("Clicked!"));
     }
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(ContentPanel.getInstance().getPsp().getWidth(), PROFILE_HEIGHT);
+        return new Dimension(ContentPanel.getPsp().getWidth(), PROFILE_HEIGHT);
     }
 }
