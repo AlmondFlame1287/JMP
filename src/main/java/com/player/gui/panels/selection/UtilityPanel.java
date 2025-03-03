@@ -11,14 +11,23 @@ import static com.player.utils.Constants.*;
 public class UtilityPanel extends JPanel {
     public UtilityPanel() {
         this.setBackground(Color.GREEN);
-        JButton b = new JButton("Click me!");
-        this.add(b);
-        b.addActionListener(evt -> new AddPlaylistDialog());
+        this.setPreferredSize(new Dimension(PSP_WIDTH, UTILITY_HEIGHT));
+        this.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 2));
+        this.init();
+    }
+
+    private void init() {
+        JButton addPlaylist = new JButton("Add Playlist");
+        JButton removePlaylist = new JButton("Remove Playlist");
+
+        this.add(addPlaylist);
+        this.add(removePlaylist);
+        addPlaylist.addActionListener(evt -> new AddPlaylistDialog());
     }
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(ContentPanel.getInstance().getPsp().getWidth(), UTILITY_HEIGHT);
+        return new Dimension(ContentPanel.getPsp().getWidth(), UTILITY_HEIGHT);
     }
 
     private static class AddPlaylistDialog extends JDialog {
