@@ -1,14 +1,15 @@
 package com.player.gui.panels.selection;
 
 import com.player.Profile;
-import com.player.gui.CircularButton;
+import com.player.gui.customs.CircularButton;
 import com.player.gui.ContentPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import static com.player.utils.Constants.*;
-import static com.player.utils.Constants.F_HEIGHT;
 
 public class ProfilePanel extends JPanel {
     public ProfilePanel() {
@@ -34,6 +35,12 @@ public class ProfilePanel extends JPanel {
         this.add(profileName);
 
         profilePfp.addActionListener(evt -> System.out.println("Clicked!"));
+        profileName.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("Clicked!");
+            }
+        });
     }
 
     @Override
