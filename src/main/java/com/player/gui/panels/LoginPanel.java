@@ -11,7 +11,6 @@ public class LoginPanel extends JPanel {
     private final JTextField nameField = new JTextField();
 
     public LoginPanel(JFrame parent) {
-        this.setBackground(Color.black);
         this.setLayout(new GridBagLayout());
         this.parent = parent;
         this.initComponents();
@@ -55,8 +54,8 @@ public class LoginPanel extends JPanel {
     }
 
     private void onDonePressed() {
-        this.changePanel();
         ContentPanel.setProfile(new Profile(nameField.getText()));
+        this.changePanel();
         ContentPanel.getPsp().loadPlaylists();
         parent.revalidate();
     }
