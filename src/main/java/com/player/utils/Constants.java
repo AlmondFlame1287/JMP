@@ -28,13 +28,11 @@ public final class Constants {
     public static final int SVP_WIDTH = SINGLE_WIDTH_UNIT * SVP_WIDTH_UNITS;
 
     // PSP
-    public static final int PROFILE_HEIGHT_UNITS = 2;
-
-    public static final int PROFILE_HEIGHT = SINGLE_HEIGHT_UNIT * PROFILE_HEIGHT_UNITS;
-    public static final int UTILITY_HEIGHT = SINGLE_HEIGHT_UNIT;
+    public static final int PROFILE_HEIGHT = (SINGLE_HEIGHT_UNIT * 3) / 4;
+    public static final int UTILITY_HEIGHT = (SINGLE_HEIGHT_UNIT * 3) / 6;
 
     // PVP
-    public static final int ALBUM_HEIGHT_UNITS = 3;
+    public static final int ALBUM_HEIGHT_UNITS = 2;
 
     public static final int ALBUM_HEIGHT = SINGLE_HEIGHT_UNIT * ALBUM_HEIGHT_UNITS;
 }
