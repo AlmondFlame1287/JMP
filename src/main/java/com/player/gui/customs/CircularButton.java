@@ -1,4 +1,4 @@
-package com.player.gui;
+package com.player.gui.customs;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,6 +34,8 @@ public class CircularButton extends JButton {
 
         // Draw the image scaled inside the circular area
         g2.drawImage(imgIcon.getImage(), x, y, diameter, diameter, this);
+
+        imgIcon.getImage().flush();
 
         g2.dispose();
     }
