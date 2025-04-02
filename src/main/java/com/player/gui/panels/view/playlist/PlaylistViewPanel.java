@@ -2,7 +2,7 @@ package com.player.gui.panels.view.playlist;
 
 import com.player.Playlist;
 import com.player.Song;
-import com.player.gui.ContentPanel;
+import com.player.gui.panels.selection.PlaylistSelectionPanel;
 
 import javax.swing.*;
 
@@ -12,12 +12,15 @@ import static com.player.utils.Constants.*;
 
 public class PlaylistViewPanel extends JPanel {
     private DefaultListModel<Song> listModel;
+    private AlbumViewPanel avp;
 
     public PlaylistViewPanel() {
         this.setPreferredSize(new Dimension(PVP_WIDTH, F_HEIGHT));
         this.setBackground(Color.BLUE);
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 1));
-        this.add(new AlbumViewPanel());
+
+        this.avp = new AlbumViewPanel();
+        this.add(this.avp);
         this.init();
     }
 
@@ -30,7 +33,7 @@ public class PlaylistViewPanel extends JPanel {
     }
 
     public void addSongsToModel() {
-        Playlist selected = ContentPanel.getPsp().getList().getSelectedValue();
+        Playlist selected = PlaylistSelectionPanel.getSelectedValue();
         System.out.println("Selected: " + selected);
 
         if(selected == null) return;
@@ -39,5 +42,9 @@ public class PlaylistViewPanel extends JPanel {
             System.out.println("Added: " + s);
             this.listModel.addElement(s);
         }
+    }
+
+    public AlbumViewPanel getAvp() {
+        return avp;
     }
 }

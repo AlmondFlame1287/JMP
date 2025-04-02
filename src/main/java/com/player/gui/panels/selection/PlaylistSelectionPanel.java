@@ -3,6 +3,7 @@ package com.player.gui.panels.selection;
 import com.player.Playlist;
 import com.player.Profile;
 import com.player.gui.ContentPanel;
+import com.player.gui.panels.view.playlist.PlaylistViewPanel;
 import com.player.utils.PlaylistCellRenderer;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ import static com.player.utils.Constants.F_HEIGHT;
 public class PlaylistSelectionPanel extends JPanel {
     private final DefaultListModel<Playlist> listModel = new DefaultListModel<>();
     private JList<Playlist> list;
+    private static Playlist selectedValue;
 
     public PlaylistSelectionPanel() {
         this.setPreferredSize(new Dimension(PSP_WIDTH, F_HEIGHT));
@@ -41,7 +43,10 @@ public class PlaylistSelectionPanel extends JPanel {
         list.addListSelectionListener(evt -> {
             if(evt.getValueIsAdjusting()) return;
 
-            ContentPanel.getPvp().addSongsToModel();
+            selectedValue = this.list.getSelectedValue();
+            PlaylistViewPanel pvp = ContentPanel.getPvp();
+            pvp.addSongsToModel();
+            pvp.getAvp().paintAlbumName();
         });
         list.setCellRenderer(new PlaylistCellRenderer());
         this.add(list);
@@ -51,7 +56,7 @@ public class PlaylistSelectionPanel extends JPanel {
         return listModel;
     }
 
-    public JList<Playlist> getList() {
-        return list;
+    public static Playlist getSelectedValue() {
+        return selectedValue;
     }
 }
