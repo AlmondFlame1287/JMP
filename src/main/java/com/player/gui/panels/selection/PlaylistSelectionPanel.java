@@ -14,6 +14,7 @@ import static com.player.utils.Constants.F_HEIGHT;
 
 public class PlaylistSelectionPanel extends JPanel {
     private final DefaultListModel<Playlist> listModel = new DefaultListModel<>();
+    private JList<Playlist> list;
 
     public PlaylistSelectionPanel() {
         this.setPreferredSize(new Dimension(PSP_WIDTH, F_HEIGHT));
@@ -30,18 +31,27 @@ public class PlaylistSelectionPanel extends JPanel {
             this.listModel.addElement(p);
         }
 
-        JList<Playlist> list = new JList<Playlist>(this.listModel){
+        list = new JList<Playlist>(this.listModel){
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension(PlaylistSelectionPanel.this.getWidth(), PlaylistSelectionPanel.this.getHeight());
             }
         };
 
+        list.addListSelectionListener(evt -> {
+            if(evt.getValueIsAdjusting()) return;
+
+            ContentPanel.getPvp().addSongsToModel();
+        });
         list.setCellRenderer(new PlaylistCellRenderer());
         this.add(list);
     }
 
     public DefaultListModel<Playlist> getListModel() {
         return listModel;
+    }
+
+    public JList<Playlist> getList() {
+        return list;
     }
 }

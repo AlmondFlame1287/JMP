@@ -3,34 +3,23 @@ package com.player.utils;
 import com.player.Playlist;
 import com.player.Song;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.nio.file.Paths;
 
 public final class PlaylistParser {
     private PlaylistParser() {}
 
     public static Playlist parseString(String str) {
-        Pattern songPattern = Pattern.compile("([A-Za-z]+),([^|]+)");
-        Pattern playlistNamePattern = Pattern.compile("([^=]+)=");
+        // TODO: Fix this
+        String[] toParse = str.split(",");
 
-        Matcher songMatcher = songPattern.matcher(str);
-        Matcher playlistNameMatcher = playlistNamePattern.matcher(str);
+        String title = toParse[0];
+        Playlist playlist = new Playlist(title);
 
-        String playlistName = null;
-        if(playlistNameMatcher.find()) {
-            playlistName = playlistNameMatcher.group(1);
+        for(int i = 1; i < toParse.length; i++) {
+            String songName = Paths.get(toParse[i]).getFileName().toString();
+            playlist.addSong(new Song(songName, toParse[i]));
         }
 
-        Playlist p = new Playlist();
-        p.setName(playlistName);
-
-        while(songMatcher.find()) {
-            String songName = songMatcher.group(1);
-            String songPath = songMatcher.group(2);
-
-            p.addSong(new Song(songName, songPath));
-        }
-
-        return p;
+        return playlist;
     }
 }

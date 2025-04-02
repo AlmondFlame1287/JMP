@@ -23,12 +23,11 @@ public class Playlist {
 
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder(this.name + "=");
+        StringBuilder str = new StringBuilder(this.name + ",");
         for(Song s : songs) {
-            str.append(s.getName())
-                    .append(",")
-                    .append(s.getSongPath())
-                    .append("|");
+            // playlistName,songxPath,songyPath,songzPath...
+            str.append(s.getSongPath())
+                    .append(",");
         }
 
         return str.toString();
@@ -49,6 +48,10 @@ public class Playlist {
 
     public Song getSongAt(int index) {
         return songs.get(index);
+    }
+
+    public List<Song> getSongs() {
+        return songs;
     }
 
 //    public List<Song> getSongs() {
