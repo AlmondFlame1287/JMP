@@ -40,6 +40,8 @@ public class PlaylistViewPanel extends JPanel {
         System.out.println("Selected: " + selected);
 
         if(selected == null) return;
+        if(!this.listModel.isEmpty())
+            this.listModel.removeAllElements();
 
         for(Song s : selected.getSongs()) {
             System.out.println("Added: " + s);
