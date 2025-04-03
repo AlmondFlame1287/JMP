@@ -10,15 +10,16 @@ import static javax.sound.sampled.AudioSystem.getAudioInputStream;
 import static javax.sound.sampled.AudioFormat.Encoding.PCM_SIGNED;
 
 public class AudioPlayer implements Runnable {
+    private static AudioPlayer instance;
     private AudioInputStream in;
     private AudioFormat outFormat;
-    private File file;
+    private static File file;
     private SourceDataLine line;
     private static boolean playing;
+    private static FloatControl volumeControl;
 
-    public AudioPlayer(File f) {
+    private AudioPlayer() {
         try {
-            file = f;
             in = getAudioInputStream(file);
             outFormat = getOutFormat(in.getFormat());
             Info info = new Info(SourceDataLine.class, outFormat);
@@ -30,17 +31,25 @@ public class AudioPlayer implements Runnable {
         }
     }
 
+    public static AudioPlayer getInstance() {
+        if(instance == null) {
+            instance = new AudioPlayer();
+        }
+        return instance;
+    }
+
     public static boolean isPlaying() {
         return playing;
     }
 
     @Override
     public void run() {
-        try {
-            this.play();
-        } catch (Exception e) {
-            this.kill();
-        }
+        playing = true;
+        this.play();
+    }
+
+    public static void setFile(File file) {
+        AudioPlayer.file = file;
     }
 
     public void kill() {
@@ -57,12 +66,21 @@ public class AudioPlayer implements Runnable {
                 in = getAudioInputStream(file);
                 line.open(outFormat);
                 line.start();
-                playing = true;
+
+                volumeControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+
                 stream(getAudioInputStream(outFormat, in), line);
             }
         } catch (LineUnavailableException | IOException | UnsupportedAudioFileException unlioe) {
             throw new IllegalStateException(unlioe);
         }
+    }
+
+    public static void setVolume(int percent) {
+        if(volumeControl == null) return;
+
+        final float newValue = volumeControl.getMaximum() + (float) (20 * Math.log10(percent/100.0f));
+        volumeControl.setValue(newValue);
     }
 
     private AudioFormat getOutFormat(AudioFormat inFormat) {
