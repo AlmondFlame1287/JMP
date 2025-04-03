@@ -68,6 +68,7 @@ public class AudioPlayer implements Runnable {
                 line.start();
 
                 volumeControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+                setVolume(50);
 
                 stream(getAudioInputStream(outFormat, in), line);
             }
@@ -79,7 +80,11 @@ public class AudioPlayer implements Runnable {
     public static void setVolume(int percent) {
         if(volumeControl == null) return;
 
-        final float newValue = volumeControl.getMaximum() + (float) (20 * Math.log10(percent/100.0f));
+        System.out.println("Current:" + volumeControl.getValue());
+        final float min = volumeControl.getMinimum();
+        final float max = 0;
+
+        final float newValue = min + (float) ((max - min) * (Math.log10(percent) / 2));
         volumeControl.setValue(newValue);
     }
 
