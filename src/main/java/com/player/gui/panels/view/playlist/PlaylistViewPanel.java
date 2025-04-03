@@ -2,6 +2,7 @@ package com.player.gui.panels.view.playlist;
 
 import com.player.Playlist;
 import com.player.Song;
+import com.player.gui.ContentPanel;
 import com.player.gui.panels.selection.PlaylistSelectionPanel;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ import static com.player.utils.Constants.*;
 
 public class PlaylistViewPanel extends JPanel {
     private DefaultListModel<Song> listModel;
-    private AlbumViewPanel avp;
+    private final AlbumViewPanel avp;
 
     public PlaylistViewPanel() {
         this.setPreferredSize(new Dimension(PVP_WIDTH, F_HEIGHT));
@@ -28,6 +29,8 @@ public class PlaylistViewPanel extends JPanel {
         this.listModel = new DefaultListModel<>();
 
         JList<Song> songsToDisplay = new JList<>(this.listModel);
+
+        songsToDisplay.addListSelectionListener(evt -> ContentPanel.getSvp().setToPlay(songsToDisplay.getSelectedValue()));
 
         this.add(songsToDisplay);
     }
