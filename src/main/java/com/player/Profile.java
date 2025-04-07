@@ -84,12 +84,7 @@ public class Profile {
     }
 
     public Image getProfilePicture() {
-        // TODO: Remove hard coded profile pic
-        try {
-            return ImageIO.read(new File("C:\\Users\\deser\\Pictures\\VRChat\\2025-03\\VRChat_2025-03-02_22-28-38.204_2560x1440.png"));
-        } catch (IOException ioe) {
-            System.err.println("Something went wrong: " + ioe.getMessage());
-            return null;
-        }
+        // TODO: Get previously saved pfp
+        return new BufferedImage(100, 100, BufferedImage.TYPE_BYTE_BINARY);
     }
 }
