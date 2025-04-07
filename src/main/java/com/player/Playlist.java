@@ -1,5 +1,6 @@
 package com.player;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,13 +9,9 @@ public class Playlist {
     // then when clicked on, loads in the songs from disk
 
     private String name;
-    // private Image playlistImage;
+    private File playlistImageFile;
     private final List<Song> songs;
 //    private int songCount;
-
-    public Playlist() {
-        this.songs = new ArrayList<>();
-    }
 
     public Playlist(String name) {
         this.name = name;
@@ -24,8 +21,12 @@ public class Playlist {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder(this.name + ",");
+
+        str.append(this.playlistImageFile)
+                .append(",");
+
         for(Song s : songs) {
-            // playlistName,songxPath,songyPath,songzPath...
+            // playlistName,imageFilePath,songxPath,songyPath,songzPath...
             str.append(s.getSongPath())
                     .append(",");
         }
@@ -33,9 +34,9 @@ public class Playlist {
         return str.toString();
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     public String getName() {
         return name;
@@ -52,6 +53,14 @@ public class Playlist {
 
     public List<Song> getSongs() {
         return songs;
+    }
+
+    public void setImageFile(File imgFile) {
+        this.playlistImageFile = imgFile;
+    }
+
+    public File getImageFile() {
+        return this.playlistImageFile;
     }
 
 //    public List<Song> getSongs() {
