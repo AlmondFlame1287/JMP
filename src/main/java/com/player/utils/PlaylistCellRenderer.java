@@ -17,6 +17,9 @@ public class PlaylistCellRenderer extends DefaultListCellRenderer {
     {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         Playlist p = (Playlist) value;
+        ImageIcon icon = new ImageIcon(ImageLoader.loadImage(p.getImageFile(), 50, 50));
+        this.setIcon(icon);
+        icon.getImage().flush();
         this.setText(p.getName());
         return this;
     }
