@@ -16,11 +16,11 @@ public class PlaylistViewPanel extends JPanel {
     private final AlbumViewPanel avp;
 
     public PlaylistViewPanel() {
-        this.setPreferredSize(new Dimension(PVP_WIDTH, F_HEIGHT));
+        this.avp = new AlbumViewPanel();
+        this.setPreferredSize(new Dimension(PVP_WIDTH, F_HEIGHT - avp.getHeight()));
         this.setBackground(Color.BLUE);
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 1));
 
-        this.avp = new AlbumViewPanel();
         this.add(this.avp);
         this.init();
     }
@@ -28,7 +28,12 @@ public class PlaylistViewPanel extends JPanel {
     private void init() {
         this.listModel = new DefaultListModel<>();
 
-        JList<Song> songsToDisplay = new JList<>(this.listModel);
+        JList<Song> songsToDisplay = new JList<Song>(this.listModel) {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(PlaylistViewPanel.this.getWidth(), PlaylistViewPanel.this.getHeight());
+            }
+        };
 
         songsToDisplay.addListSelectionListener(evt -> ContentPanel.getSvp().setToPlay(songsToDisplay.getSelectedValue()));
 
@@ -37,14 +42,15 @@ public class PlaylistViewPanel extends JPanel {
 
     public void addSongsToModel() {
         Playlist selected = PlaylistSelectionPanel.getSelectedValue();
-        System.out.println("Selected: " + selected);
-
         if(selected == null) return;
+
+        System.out.println("Selected playlist " + selected.getName() + " with songs:");
+        selected.getSongs().forEach(song -> System.out.println("| " + song.getName()));
+
         if(!this.listModel.isEmpty())
             this.listModel.removeAllElements();
 
         for(Song s : selected.getSongs()) {
-            System.out.println("Added: " + s);
             this.listModel.addElement(s);
         }
     }
