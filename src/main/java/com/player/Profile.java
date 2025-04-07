@@ -73,11 +73,10 @@ public class Profile {
         return name;
     }
 
-    public void addPlaylist(String name) {
-        Playlist toAdd = new Playlist(name);
-        this.playlists.add(toAdd);
-        ContentPanel.getPsp().getListModel().addElement(toAdd);
-        System.out.println("Added playlist " + name);
+    public void addPlaylist(Playlist playlist) {
+        this.playlists.add(playlist);
+        ContentPanel.getPsp().getListModel().addElement(playlist);
+        System.out.println("Added playlist " + playlist.getName());
     }
 
     public List<Playlist> getPlaylists() {
