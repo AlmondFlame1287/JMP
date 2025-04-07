@@ -2,6 +2,8 @@ package com.player.gui.panels;
 
 import com.player.Profile;
 import com.player.gui.ContentPanel;
+import com.player.utils.Constants;
+import com.player.utils.GradiantGenerator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,16 +69,12 @@ public class LoginPanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        this.setGradientAsBackground((Graphics2D) g);
-    }
-
-    private void setGradientAsBackground(Graphics2D g) {
-        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        int w = getWidth(), h = getHeight();
-        Color color1 = Color.decode("#accbee");
-        Color color2 = Color.decode("#e7f0fd");
-        GradientPaint gp = new GradientPaint(0, 0, color1, w, h, color2);
-        g.setPaint(gp);
-        g.fillRect(0, 0, w, h);
+        GradiantGenerator.setGradientAsBackground(
+                (Graphics2D) g, new Color[] {
+                    Color.decode("#accbee"),
+                    Color.decode("#e7f0fd")
+                }, this.getWidth(), this.getHeight(),
+                Constants.GradientStyle.TOP_TO_BOTTOM
+        );
     }
 }
