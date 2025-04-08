@@ -1,4 +1,4 @@
-package com.player.utils;
+package com.player.gui.customs.renderers;
 
 
 import com.player.Playlist;
@@ -13,10 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PlaylistCellRenderer extends DefaultListCellRenderer {
     // Cache loaded images to avoid reloading and re-triggering SwingWorker
     private final Map<File, ImageIcon> imageCache = new ConcurrentHashMap<>();
-    private final ImageIcon placeholderIcon = new ImageIcon(new BufferedImage(50, 50, BufferedImage.TYPE_INT_ARGB));
+    private final ImageIcon placeholderIcon = new ImageIcon(new BufferedImage(50, 50, BufferedImage.TYPE_USHORT_555_RGB));
 
     @Override
-    public Component getListCellRendererComponent(JList list,
+    public Component getListCellRendererComponent(JList<?> list,
                                                   Object value, int index, boolean isSelected,
                                                   boolean cellHasFocus)
     {
@@ -25,6 +25,18 @@ public class PlaylistCellRenderer extends DefaultListCellRenderer {
 
         File imageFile = playlist.getImageFile();
         label.setText(playlist.getName());
+        label.setOpaque(true);
+
+        if(isSelected) {
+            label.setBackground(Color.DARK_GRAY);
+            label.setForeground(Color.WHITE);
+            label.setBorder(BorderFactory.createEtchedBorder());
+        }
+
+        if(imageFile == null) {
+            label.setIcon(placeholderIcon);
+            return label;
+        }
 
         ImageIcon cachedIcon = imageCache.get(imageFile);
         if (cachedIcon != null) {
@@ -33,6 +45,8 @@ public class PlaylistCellRenderer extends DefaultListCellRenderer {
             label.setIcon(placeholderIcon); // Temporary icon
             loadImageAsync(imageFile, list, index);
         }
+
+
 
         return label;
     }
