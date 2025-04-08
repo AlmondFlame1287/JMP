@@ -1,6 +1,5 @@
 package com.player.gui.panels.view.playlist;
 
-import com.player.Playlist;
 import com.player.gui.ContentPanel;
 import com.player.gui.panels.selection.PlaylistSelectionPanel;
 
@@ -14,7 +13,7 @@ public class AlbumViewPanel extends JPanel {
     private final JLabel albumTitle;
 
     public AlbumViewPanel() {
-        this.setBackground(Color.MAGENTA);
+        this.setBackground(Color.decode("#2b2929"));
         this.setPreferredSize(new Dimension(PVP_WIDTH, ALBUM_HEIGHT));
         albumTitle = new JLabel();
         this.add(albumTitle);

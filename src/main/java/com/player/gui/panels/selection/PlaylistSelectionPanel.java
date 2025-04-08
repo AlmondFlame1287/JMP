@@ -4,7 +4,7 @@ import com.player.Playlist;
 import com.player.Profile;
 import com.player.gui.ContentPanel;
 import com.player.gui.panels.view.playlist.PlaylistViewPanel;
-import com.player.utils.PlaylistCellRenderer;
+import com.player.gui.customs.renderers.PlaylistCellRenderer;
 
 import javax.swing.*;
 
@@ -34,6 +34,13 @@ public class PlaylistSelectionPanel extends JPanel {
         }
 
         list = new JList<Playlist>(this.listModel){
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                this.setBackground(Color.BLACK);
+                this.setForeground(Color.WHITE);
+            }
+
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension(PlaylistSelectionPanel.this.getWidth(), PlaylistSelectionPanel.this.getHeight());
