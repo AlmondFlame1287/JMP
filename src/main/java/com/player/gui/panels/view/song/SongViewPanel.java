@@ -29,19 +29,24 @@ public class SongViewPanel extends JPanel {
         JButton next = new JButton(">");
         JSlider volumeSlider = new JSlider();
 
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
         this.add(prev, gbc);
 
         gbc.gridx = 1;
+        gbc.weightx = 1;
         this.add(this.pausePlay, gbc);
 
         gbc.gridx = 2;
+        gbc.weightx = 0;
+        gbc.gridwidth = 1;
         this.add(next, gbc);
 
-        gbc.gridx = 1;
+        gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.insets = new Insets(15, 10, 15 ,10);
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.weightx = 1;
         this.add(volumeSlider, gbc);
 
         // TODO: Find a way to select prev and next songs
