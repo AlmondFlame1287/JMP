@@ -2,7 +2,7 @@ package com.player.gui.panels.selection;
 
 import com.player.Profile;
 import com.player.gui.ContentPanel;
-import com.player.gui.customs.AbstractCircularButton;
+import com.player.gui.customs.CircularButton;
 import com.player.utils.GradiantGenerator;
 
 import javax.swing.*;
@@ -25,7 +25,7 @@ public class ProfilePanel extends JPanel {
         Profile p = ContentPanel.getProfile();
         JLabel profileName = new JLabel(p.getName());
         profileName.setForeground(Color.WHITE);
-        AbstractCircularButton profilePfp = new AbstractCircularButton(/*p.getProfilePicture()*/Color.BLACK, Color.BLUE) {
+        CircularButton profilePfp = new CircularButton(p.getProfilePicture()) {
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension(50, ProfilePanel.this.getHeight());
