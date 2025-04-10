@@ -21,8 +21,8 @@ public class UtilityPanel extends JPanel {
 //        JButton addPlaylist = new JButton("+");
 //        JButton removePlaylist = new JButton("-");
 
-        CircularButton addPlaylist = new CircularButton(Color.GREEN, Color.RED, "+");
-        CircularButton removePlaylist = new CircularButton(Color.GREEN, Color.RED, "-");
+        CircularButton addPlaylist = new CircularButton(Color.DARK_GRAY, Color.LIGHT_GRAY, "+");
+        CircularButton removePlaylist = new CircularButton(Color.DARK_GRAY, Color.LIGHT_GRAY, "-");
 
         this.add(addPlaylist);
         this.add(removePlaylist);
