@@ -15,14 +15,18 @@ public class AlbumViewPanel extends JPanel {
     public AlbumViewPanel() {
         this.setBackground(Color.decode("#2b2929"));
         this.setPreferredSize(new Dimension(PVP_WIDTH, ALBUM_HEIGHT));
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        this.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         albumTitle = new JLabel();
         this.add(albumTitle);
     }
 
-    public void paintAlbumName() {
+    public void paintAlbumName(ImageIcon img) {
 //        Playlist selected = PlaylistSelectionPanel.getSelectedValue();
 //        this.getGraphics().drawString(selected.getName(), 0, this.getHeight() / 2);
         // TEMPFIX
+        this.albumTitle.setIcon(img);
+        this.albumTitle.setForeground(Color.WHITE);
         this.albumTitle.setText(PlaylistSelectionPanel.getSelectedValue().getName());
     }
 
