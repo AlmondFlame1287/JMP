@@ -25,6 +25,8 @@ public class MFrame extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                if(ContentPanel.getProfile() == null) System.exit(0);
+
                 ContentPanel.getProfile().savePlaylistToFile();
                 super.windowClosing(e);
             }
