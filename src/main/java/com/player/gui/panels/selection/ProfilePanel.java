@@ -14,7 +14,7 @@ import static com.player.utils.Constants.*;
 
 public class ProfilePanel extends JPanel {
     public ProfilePanel() {
-        this.setBackground(Color.CYAN);
+        this.setBackground(Color.BLACK);
 //        this.setPreferredSize(new Dimension(PSP_WIDTH, PROFILE_HEIGHT));
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
@@ -25,7 +25,7 @@ public class ProfilePanel extends JPanel {
         Profile p = ContentPanel.getProfile();
         JLabel profileName = new JLabel(p.getName());
         profileName.setForeground(Color.WHITE);
-        CircularButton profilePfp = new CircularButton(p.getProfilePicture()) {
+        CircularButton profilePfp = new CircularButton(/*p.getProfilePicture()*/Color.RED, Color.CYAN, "pfp") {
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension(50, ProfilePanel.this.getHeight());
@@ -49,9 +49,9 @@ public class ProfilePanel extends JPanel {
         return new Dimension(ContentPanel.getPsp().getWidth(), PROFILE_HEIGHT);
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        GradiantGenerator.setGradientAsBackground((Graphics2D) g, new Color[]{Color.GRAY, Color.BLACK}, this.getWidth(), this.getHeight(), GradientStyle.TOP_TO_BOTTOM);
-    }
+//    @Override
+//    public void paintComponent(Graphics g) {
+//        super.paintComponent(g);
+//        GradiantGenerator.setGradientAsBackground((Graphics2D) g, new Color[]{Color.GRAY, Color.BLACK}, this.getWidth(), this.getHeight(), GradientStyle.TOP_TO_BOTTOM);
+//    }
 }
