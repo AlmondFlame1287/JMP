@@ -53,7 +53,7 @@ public class PlaylistSelectionPanel extends JPanel {
             selectedValue = this.list.getSelectedValue();
             PlaylistViewPanel pvp = ContentPanel.getPvp();
             pvp.addSongsToModel();
-            pvp.getAvp().paintAlbumName();
+            pvp.getAvp().paintAlbumName(PlaylistCellRenderer.getCachedImage(list.getSelectedValue().getImageFile()));
         });
         list.setCellRenderer(new PlaylistCellRenderer());
         this.add(list);
