@@ -12,8 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PlaylistCellRenderer extends DefaultListCellRenderer {
     // Cache loaded images to avoid reloading and re-triggering SwingWorker
-    private final Map<File, ImageIcon> imageCache = new ConcurrentHashMap<>();
-    private final ImageIcon placeholderIcon = new ImageIcon(new BufferedImage(50, 50, BufferedImage.TYPE_USHORT_555_RGB));
+    private static final Map<File, ImageIcon> imageCache = new ConcurrentHashMap<>();
+    private static final ImageIcon placeholderIcon = new ImageIcon(new BufferedImage(50, 50, BufferedImage.TYPE_USHORT_555_RGB));
 
     @Override
     public Component getListCellRendererComponent(JList<?> list,
@@ -76,5 +76,9 @@ public class PlaylistCellRenderer extends DefaultListCellRenderer {
                 }
             }
         }.execute();
+    }
+
+    public static ImageIcon getCachedImage(File f) {
+        return imageCache.get(f);
     }
 }
