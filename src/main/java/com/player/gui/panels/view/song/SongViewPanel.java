@@ -1,9 +1,11 @@
 package com.player.gui.panels.view.song;
 
 import com.player.Song;
+import com.player.gui.customs.TransparentButton;
 import com.player.sound.AudioPlayer;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicSliderUI;
 
 import java.awt.*;
 
@@ -19,15 +21,18 @@ public class SongViewPanel extends JPanel {
         this.setPreferredSize(new Dimension(SVP_WIDTH, F_HEIGHT));
         this.setBackground(Color.RED);
         this.setLayout(new GridBagLayout());
+        this.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
         this.init();
     }
 
     private void init() {
         GridBagConstraints gbc = new GridBagConstraints();
-        JButton prev = new JButton("<");
-        this.pausePlay = new JButton("Play");
-        JButton next = new JButton(">");
+        TransparentButton prev = new TransparentButton("|<");
+        this.pausePlay = new TransparentButton("Play");
+        TransparentButton next = new TransparentButton(">|");
         JSlider volumeSlider = new JSlider();
+
+        this.setupSlider(volumeSlider);
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
@@ -53,6 +58,32 @@ public class SongViewPanel extends JPanel {
 
         this.pausePlay.addActionListener(evt -> startStop());
         volumeSlider.addChangeListener(evt -> AudioPlayer.setVolume(volumeSlider.getValue()));
+    }
+
+    private void setupSlider(JSlider slider) {
+        slider.setFocusable(false);
+        slider.setPaintTicks(false);
+        slider.setPaintLabels(false);
+        slider.setBackground(this.getBackground());
+
+        slider.setUI(new BasicSliderUI(slider) {
+            @Override
+            public void paintTrack(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Color.WHITE);
+                g2.fillRoundRect(trackRect.x, trackRect.y + trackRect.height / 2 - 2, trackRect.width, 4, 4, 4);
+            }
+
+            @Override
+            public void paintThumb(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Color.LIGHT_GRAY);
+                g2.fillOval(thumbRect.x, thumbRect.y, thumbRect.width, thumbRect.height);
+                g2.dispose();
+            }
+        });
     }
 
     public void setToPlay(Song toPlay) {
