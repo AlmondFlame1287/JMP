@@ -2,6 +2,8 @@ package com.player.gui.panels;
 
 import com.player.Profile;
 import com.player.gui.ContentPanel;
+import com.player.gui.customs.CustomTextField;
+import com.player.gui.customs.TransparentButton;
 import com.player.utils.Constants;
 import com.player.utils.GradiantGenerator;
 
@@ -10,18 +12,20 @@ import java.awt.*;
 
 public class LoginPanel extends JPanel {
     private final JFrame parent;
-    private final JTextField nameField = new JTextField();
+    private final CustomTextField nameField;
 
     public LoginPanel(JFrame parent) {
         this.setLayout(new GridBagLayout());
         this.parent = parent;
+        this.nameField = new CustomTextField(8);
         this.initComponents();
     }
 
     private void initComponents() {
         final JLabel usernameLabel = new JLabel("Username:");
-        final JButton done = new JButton("Done");
-        final JButton exit = new JButton("Exit");
+        usernameLabel.setForeground(Color.WHITE);
+        final TransparentButton done = new TransparentButton("Done");
+        final TransparentButton exit = new TransparentButton("Exit");
         GridBagConstraints constraints = new GridBagConstraints();
 
         done.addActionListener(evt -> onDonePressed());
@@ -71,8 +75,10 @@ public class LoginPanel extends JPanel {
         super.paintComponent(g);
         GradiantGenerator.setGradientAsBackground(
                 (Graphics2D) g, new Color[] {
-                    Color.decode("#accbee"),
-                    Color.decode("#e7f0fd")
+//                    Color.decode("#accbee"),
+//                    Color.decode("#e7f0fd")
+                        Color.decode("#3e403f"),
+                        Color.decode("#232423")
                 }, this.getWidth(), this.getHeight(),
                 Constants.GradientStyle.TOP_TO_BOTTOM
         );
