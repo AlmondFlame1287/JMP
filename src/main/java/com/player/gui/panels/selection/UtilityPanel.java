@@ -14,6 +14,7 @@ public class UtilityPanel extends JPanel {
         this.setBackground(Color.BLACK);
         this.setPreferredSize(new Dimension(PSP_WIDTH, UTILITY_HEIGHT));
         this.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        this.setBorder(BorderFactory.createEmptyBorder(0,0,3,0));
         this.init();
     }
 
