@@ -32,11 +32,20 @@ public class MFrame extends JFrame {
     }
 
     private void setupMenuBar() {
-        JMenuBar jmb = new JMenuBar(); // TODO: Get a better looking jmb
+        JMenuBar jmb = new JMenuBar();
         JMenu file = new JMenu("File");
         JMenu edit = new JMenu("Edit");
         JMenu view = new JMenu("View");
         JMenu preferences = new JMenu("Preferences");
+
+        jmb.setBackground(Color.decode("#141414"));
+//        jmb.setForeground(Color.WHITE);
+        jmb.setBorderPainted(false);
+
+        file.setForeground(Color.LIGHT_GRAY);
+        edit.setForeground(Color.LIGHT_GRAY);
+        view.setForeground(Color.LIGHT_GRAY);
+        preferences.setForeground(Color.LIGHT_GRAY);
 
         // TODO: Implement sign-out
         JMenuItem signOut = new JMenuItem("Sign out");
