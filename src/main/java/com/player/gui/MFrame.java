@@ -3,8 +3,9 @@ package com.player.gui;
 import com.player.gui.panels.LoginPanel;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicMenuUI;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -57,23 +58,27 @@ public class MFrame extends JFrame {
     }
 
     private JMenu createCustomJMenu(String txt) {
-        JMenu menu = new JMenu(txt);
-
-        menu.setUI(new BasicMenuUI() {
+        JMenu menu = new JMenu(txt) {
             @Override
-            protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            public void paintBorder(Graphics g) {
 
-                g2.setColor(Color.BLACK);
-                g2.fillRect(0, 0, menuItem.getWidth(), menuItem.getHeight());
+            }
+        };
+
+        menu.setOpaque(false);
+        menu.setForeground(Color.WHITE);
+
+        menu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                menu.setForeground(new Color(255, 255, 255, 200));
+                repaint();
             }
 
             @Override
-            protected void paintText(Graphics g, JMenuItem menuItem, Rectangle textRect, String text) {
-                g.setColor(Color.LIGHT_GRAY);
-                g.setFont(menuItem.getFont());
-                g.drawString(text, textRect.x, textRect.y + g.getFontMetrics().getAscent());
+            public void mouseExited(MouseEvent e) {
+                menu.setForeground(Color.WHITE);
+                repaint();
             }
         });
 
