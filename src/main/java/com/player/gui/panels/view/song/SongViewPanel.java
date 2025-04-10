@@ -19,7 +19,7 @@ public class SongViewPanel extends JPanel {
 
     public SongViewPanel() {
         this.setPreferredSize(new Dimension(SVP_WIDTH, F_HEIGHT));
-        this.setBackground(Color.RED);
+        this.setBackground(Color.BLACK);
         this.setLayout(new GridBagLayout());
         this.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
         this.init();
