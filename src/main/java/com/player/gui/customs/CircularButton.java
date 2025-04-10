@@ -10,7 +10,7 @@ public class CircularButton extends JButton {
     private Color backgroundColor;
     private final boolean isImageButton;
 
-    private static final int padding = 4;
+    private static final int padding = 3;
 
     // Constructor for image-based button
     public CircularButton(Image img) {
