@@ -29,6 +29,7 @@ public class MFrame extends JFrame {
             public void windowClosing(WindowEvent e) {
                 if(ContentPanel.getProfile() == null) System.exit(0);
 
+                ContentPanel.getProfile().savePfpToFile();
                 ContentPanel.getProfile().savePlaylistToFile();
                 super.windowClosing(e);
             }
