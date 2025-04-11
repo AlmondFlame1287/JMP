@@ -25,7 +25,7 @@ public final class Song {
         return songPath;
     }
 
-    private String stripNameOfExtension(String name) {
+    public static String stripNameOfExtension(String name) {
         final int dotIndex = name.lastIndexOf(".");
         return (dotIndex == -1) ? name : name.substring(0, dotIndex);
     }
