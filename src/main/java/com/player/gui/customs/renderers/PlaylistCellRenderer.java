@@ -79,6 +79,8 @@ public class PlaylistCellRenderer extends DefaultListCellRenderer {
     }
 
     public static ImageIcon getCachedImage(File f) {
+        if(f == null) return placeholderIcon;
+
         return imageCache.get(f);
     }
 }
