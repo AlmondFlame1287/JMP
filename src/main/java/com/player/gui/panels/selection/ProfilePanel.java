@@ -3,9 +3,9 @@ package com.player.gui.panels.selection;
 import com.player.Profile;
 import com.player.gui.ContentPanel;
 import com.player.gui.customs.CircularButton;
-import com.player.utils.GradiantGenerator;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -13,9 +13,10 @@ import java.awt.event.MouseEvent;
 import static com.player.utils.Constants.*;
 
 public class ProfilePanel extends JPanel {
+    private CircularButton profilePfp;
+
     public ProfilePanel() {
         this.setBackground(Color.BLACK);
-//        this.setPreferredSize(new Dimension(PSP_WIDTH, PROFILE_HEIGHT));
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
         this.init();
@@ -25,17 +26,17 @@ public class ProfilePanel extends JPanel {
         Profile p = ContentPanel.getProfile();
         JLabel profileName = new JLabel(p.getName());
         profileName.setForeground(Color.WHITE);
-        CircularButton profilePfp = new CircularButton(/*p.getProfilePicture()*/Color.RED, Color.CYAN, "pfp") {
+        this.profilePfp = new CircularButton(p.getProfilePictureIcon().getImage()) {
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension(50, ProfilePanel.this.getHeight());
             }
         };
 
-        this.add(profilePfp);
+        this.add(this.profilePfp);
         this.add(profileName);
 
-        profilePfp.addActionListener(evt -> System.out.println("Clicked!"));
+        this.profilePfp.addActionListener(evt -> this.chooseProfilePicture());
         profileName.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -44,14 +45,22 @@ public class ProfilePanel extends JPanel {
         });
     }
 
+    private void chooseProfilePicture() {
+        JFileChooser jfc = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG & PNG", "jpg", "png", "jpeg");
+        jfc.setFileFilter(filter);
+
+        final int result = jfc.showOpenDialog(this);
+
+        if(result != JFileChooser.APPROVE_OPTION) return;
+
+        Profile p = ContentPanel.getProfile();
+        p.setProfilePictureFile(jfc.getSelectedFile());
+        this.profilePfp.setImg(p.getProfilePictureIcon().getImage());
+    }
+
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(ContentPanel.getPsp().getWidth(), PROFILE_HEIGHT);
     }
-
-//    @Override
-//    public void paintComponent(Graphics g) {
-//        super.paintComponent(g);
-//        GradiantGenerator.setGradientAsBackground((Graphics2D) g, new Color[]{Color.GRAY, Color.BLACK}, this.getWidth(), this.getHeight(), GradientStyle.TOP_TO_BOTTOM);
-//    }
 }
