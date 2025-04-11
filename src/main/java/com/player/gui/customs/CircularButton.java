@@ -12,22 +12,22 @@ public class CircularButton extends JButton {
 
     private static final int padding = 3;
 
-    // Constructor for image-based button
-    public CircularButton(Image img) {
-        this.img = img;
-        this.isImageButton = true;
-
-        this.setContentAreaFilled(false);
-        this.setBorderPainted(false);
-        this.setFocusPainted(false);
-    }
-
     // Constructor for color + text-based button
     public CircularButton(Color borderColor, Color backgroundColor, String text) {
         this.borderColor = borderColor;
         this.backgroundColor = backgroundColor;
         this.setText(text);
         this.isImageButton = false;
+
+        this.setContentAreaFilled(false);
+        this.setBorderPainted(false);
+        this.setFocusPainted(false);
+    }
+
+    // Constructor for image-based button
+    public CircularButton(Image img) {
+        this.img = img;
+        this.isImageButton = true;
 
         this.setContentAreaFilled(false);
         this.setBorderPainted(false);
@@ -48,7 +48,6 @@ public class CircularButton extends JButton {
 
         if (isImageButton && img != null) {
             g2.drawImage(img, x, y, diameter, diameter, this);
-            img.flush();
             g2.dispose();
             return;
         }
@@ -89,5 +88,10 @@ public class CircularButton extends JButton {
         g2.drawOval(x, y, diameter, diameter);
 
         g2.dispose();
+    }
+
+    public void setImg(Image img) {
+        this.img = img;
+        this.repaint();
     }
 }
