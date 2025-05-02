@@ -17,8 +17,11 @@ public class AudioPlayer implements Runnable {
     private SourceDataLine line;
     private static boolean playing;
     private static FloatControl volumeControl;
+    private static int bytesWrittenToLine;
 
     private AudioPlayer() {
+        bytesWrittenToLine = 0;
+
         try {
             in = getAudioInputStream(file);
             outFormat = getOutFormat(in.getFormat());
@@ -49,6 +52,7 @@ public class AudioPlayer implements Runnable {
     }
 
     public static void setFile(File file) {
+        bytesWrittenToLine = 0; // Reset the number of bytesWritten so that when selecting a new song, we don't skip said bytes
         AudioPlayer.file = file;
     }
 
@@ -61,17 +65,17 @@ public class AudioPlayer implements Runnable {
     }
 
     private void play() {
+        if (line == null) return;
+
         try {
-            if (line != null) {
-                in = getAudioInputStream(file);
-                line.open(outFormat);
-                line.start();
+            in = getAudioInputStream(file);
+            line.open(outFormat);
+            line.start();
 
-                volumeControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
-                setVolume(50);
+            volumeControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+            setVolume(50);
 
-                stream(getAudioInputStream(outFormat, in), line);
-            }
+            stream(getAudioInputStream(outFormat, in), line);
         } catch (LineUnavailableException | IOException | UnsupportedAudioFileException unlioe) {
             throw new IllegalStateException(unlioe);
         }
@@ -88,16 +92,33 @@ public class AudioPlayer implements Runnable {
         volumeControl.setValue(newValue);
     }
 
+    /**
+     * Gets the format form the AudioInputStream format
+     * @param inFormat the input stream format
+     * @return a new format, same as the one from the input
+     */
     private AudioFormat getOutFormat(AudioFormat inFormat) {
         final int ch = inFormat.getChannels();
         final float rate = inFormat.getSampleRate();
         return new AudioFormat(PCM_SIGNED, rate, 16, ch, ch * 2, rate, false);
     }
 
+    /**
+     * Stream bytes from the input stream to the data line for audio playing.
+     * @param in the input stream
+     * @param line the output data line
+     * @throws IOException when the line can't be written to
+     */
     private void stream(AudioInputStream in, SourceDataLine line) throws IOException {
-        final byte[] buffer = new byte[line.getBufferSize()];
-        for (int i = 0; i != -1; i = in.read(buffer, 0, buffer.length)) {
-            line.write(buffer, 0, i);
+        long bytesSkipped = in.skip(bytesWrittenToLine);
+        System.out.println("Bytes skipped: " + bytesSkipped);
+
+        final byte[] buffer = new byte[line.getBufferSize()]; // A middle-buffer that's the same size as the line buffer
+        for (int i = 0; i != -1; i = in.read(buffer, 0, buffer.length)) { // Read buffer.length bytes into buffer, with an offset of 0
+            bytesWrittenToLine += line.write(buffer, 0, i); // Write the data i bytes from buffer to the line with an offset of 0
+                                                                // Once we have the number of bytes actually written,
+                                                                // we can skip that same amount of bytes next time we
+                                                                // start the stream
         }
     }
 }
