@@ -72,6 +72,9 @@ public class Profile {
     public void savePfpToFile() {
         try(FileWriter fw = new FileWriter(this.profileFile);
             BufferedWriter bw = new BufferedWriter(fw)) {
+
+            if(this.profilePictureFile == null) return;
+
             bw.write(this.profilePictureFile.toString());
         } catch (IOException ioe) {
             System.err.println("Something went wrong with saving pfp to file: " + ioe.getMessage());
