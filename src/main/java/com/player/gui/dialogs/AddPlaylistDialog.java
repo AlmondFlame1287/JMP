@@ -60,7 +60,11 @@ public class AddPlaylistDialog extends JDialog {
     }
 
     private void onAddPlaylistClicked() {
-        Playlist playlist = new Playlist(this.playlistNameField.getText());
+        String playlistName = this.playlistNameField.getText();
+
+        if(playlistName.isEmpty()) return;
+
+        Playlist playlist = new Playlist(playlistName);
         playlist.setImageFile(img);
 
         for (int i = 0; i < this.model.getSize(); i++) {
