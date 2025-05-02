@@ -88,16 +88,16 @@ public class SongViewPanel extends JPanel {
 
     public void setToPlay(Song toPlay) {
         this.toPlay = toPlay;
+        AudioPlayer.setFile(toPlay.getSongPath().toFile());
     }
 
     private void startStop() {
-        AudioPlayer.setFile(toPlay.getSongPath().toFile());
         AudioPlayer audioPlayer = AudioPlayer.getInstance();
         Thread t = new Thread(audioPlayer);
 
         if(!AudioPlayer.isPlaying()) {
             t.start();
-            this.pausePlay.setText("Stop");
+            this.pausePlay.setText("Pause");
         } else {
             audioPlayer.kill();
             this.pausePlay.setText("Play");
