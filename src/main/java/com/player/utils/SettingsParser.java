@@ -2,8 +2,6 @@ package com.player.utils;
 
 import com.player.Playlist;
 import com.player.Song;
-import com.player.gui.ContentPanel;
-import com.player.gui.panels.selection.PlaylistSelectionPanel;
 
 import java.io.*;
 import java.util.*;
@@ -14,10 +12,13 @@ import static com.player.utils.Constants.SETTINGS_PATH;
 
 /*
  * Settings available as of version 1.0.0
- * - Background color for every panel
+ * - Background color for almost every panel
  * - Add default directories where to scan for new songs automatically
  */
 public class SettingsParser {
+    private static final Playlist defaultPlaylist = new Playlist("Default");
+    private static final List<Color> colorList = new ArrayList<>(5);
+
     private SettingsParser() {}
 
     public static void parseSettingsFile() {
@@ -57,7 +58,6 @@ public class SettingsParser {
 
         File dir;
         List<File> songFiles;
-        final Playlist defaultPlaylist = new Playlist("Default");
 
         for(int i = 1; i < dirs.length; i++) {
             dir = new File(dirs[i]);
@@ -68,24 +68,36 @@ public class SettingsParser {
 
             songFiles.forEach(song -> defaultPlaylist.addSong(new Song(Song.stripNameOfExtension(song.getName()), song.getPath())));
         }
-
-        ContentPanel.getProfile().addPlaylist(defaultPlaylist);
     }
 
     private static void parseBackgroundColors(String[] colorsHex) {
-        final List<Color> colorList = new ArrayList<>(5);
-
         // Colors will be in this order:
         // PSP, PVP, AVP, SVP
         for (int i = 1; i < colorsHex.length; i++) {
             colorList.add(Color.decode(colorsHex[i]));
         }
+    }
 
-        ContentPanel.getPsp().setBackground(colorList.get(0));
-        PlaylistSelectionPanel.getPfpPanel().setBackground(colorList.get(0));
-        PlaylistSelectionPanel.getUtilityPanel().setBackground(colorList.get(0));
-        ContentPanel.getPvp().setBackground(colorList.get(1));
-        ContentPanel.getPvp().getAvp().setBackground(colorList.get(2));
-        ContentPanel.getSvp().setBackground(colorList.get(3));
+    public static Color getColor(String panelName) {
+        if (colorList.isEmpty()) return null;
+
+        switch (panelName) {
+            case "psp":
+            case "profile":
+            case "utility":
+                return colorList.get(0);
+            case "pvp":
+                return colorList.get(1);
+            case "avp":
+                return colorList.get(2);
+            case "svp":
+                return colorList.get(3);
+            default:
+                return null;
+        }
+    }
+
+    public static Playlist getDefaultPlaylist() {
+        return defaultPlaylist;
     }
 }

@@ -5,6 +5,7 @@ import com.player.Song;
 import com.player.gui.ContentPanel;
 import com.player.gui.customs.renderers.SongCellRenderer;
 import com.player.gui.panels.selection.PlaylistSelectionPanel;
+import com.player.utils.SettingsParser;
 
 import javax.swing.*;
 
@@ -19,7 +20,7 @@ public class PlaylistViewPanel extends JPanel {
     public PlaylistViewPanel() {
         this.avp = new AlbumViewPanel();
         this.setPreferredSize(new Dimension(PVP_WIDTH, F_HEIGHT - avp.getHeight()));
-        this.setBackground(Color.decode("#141414"));
+        this.setBackground(SettingsParser.getColor("pvp") == null ? Color.decode("#141414") : SettingsParser.getColor("pvp"));
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 1));
 
         this.add(this.avp);

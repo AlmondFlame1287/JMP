@@ -2,6 +2,7 @@ package com.player.main;
 
 import com.player.gui.MFrame;
 import com.player.utils.DirectoryInitializer;
+import com.player.utils.SettingsParser;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -10,6 +11,7 @@ import java.io.File;
 public class Main {
     public static void main(String[] args) {
         DirectoryInitializer.initializeDirectories();
+        SettingsParser.parseSettingsFile();
         SwingUtilities.invokeLater(MFrame::new);
     }
 

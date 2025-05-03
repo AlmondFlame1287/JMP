@@ -3,6 +3,7 @@ package com.player.gui.panels.view.song;
 import com.player.Song;
 import com.player.gui.customs.TransparentButton;
 import com.player.sound.AudioPlayer;
+import com.player.utils.SettingsParser;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -13,13 +14,12 @@ import static com.player.utils.Constants.*;
 import static com.player.utils.Constants.F_HEIGHT;
 
 public class SongViewPanel extends JPanel {
-    private Song toPlay;
     private JButton pausePlay;
 
 
     public SongViewPanel() {
         this.setPreferredSize(new Dimension(SVP_WIDTH, F_HEIGHT));
-        this.setBackground(Color.BLACK);
+        this.setBackground(SettingsParser.getColor("svp") == null ? Color.BLACK : SettingsParser.getColor("svp"));
         this.setLayout(new GridBagLayout());
         this.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
         this.init();
@@ -87,7 +87,6 @@ public class SongViewPanel extends JPanel {
     }
 
     public void setToPlay(Song toPlay) {
-        this.toPlay = toPlay;
         AudioPlayer.setFile(toPlay.getSongPath().toFile());
     }
 
