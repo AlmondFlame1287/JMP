@@ -1,5 +1,6 @@
 package com.player.gui;
 
+import com.player.gui.dialogs.SettingsDialog;
 import com.player.gui.panels.LoginPanel;
 
 import javax.swing.*;
@@ -49,10 +50,13 @@ public class MFrame extends JFrame {
         jmb.setBackground(Color.decode("#141414"));
         jmb.setBorderPainted(false);
 
-        // TODO: Implement sign-out
         JMenuItem signOut = new JMenuItem("Sign out");
-        signOut.addActionListener(evt -> this.setContentPane(loginPanel));
         file.add(signOut);
+        signOut.addActionListener(evt -> this.setContentPane(loginPanel));
+
+        JMenuItem settings = new JMenuItem("Settings");
+        preferences.add(settings);
+        settings.addActionListener(evt -> new SettingsDialog());
 
         jmb.add(file);
         jmb.add(edit);
