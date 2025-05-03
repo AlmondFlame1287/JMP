@@ -6,10 +6,11 @@ import com.player.gui.customs.CustomTextField;
 import com.player.gui.customs.TransparentButton;
 import com.player.utils.Constants;
 import com.player.utils.GradiantGenerator;
-import com.player.utils.SettingsParser;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static com.player.utils.SettingsParser.getDefaultPlaylist;
 
 public class LoginPanel extends JPanel {
     private final JFrame parent;
@@ -69,7 +70,7 @@ public class LoginPanel extends JPanel {
 
     private void changePanel() {
         parent.setContentPane(new ContentPanel());
-        SettingsParser.parseSettingsFile();
+        ContentPanel.getProfile().addPlaylist(getDefaultPlaylist());
     }
 
     @Override
