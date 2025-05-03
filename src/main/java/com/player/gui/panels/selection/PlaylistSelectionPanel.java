@@ -17,13 +17,17 @@ public class PlaylistSelectionPanel extends JPanel {
     private final DefaultListModel<Playlist> listModel = new DefaultListModel<>();
     private JList<Playlist> list;
     private static Playlist selectedValue;
+    private static ProfilePanel pfpPanel;
+    private static UtilityPanel utilityPanel;
 
     public PlaylistSelectionPanel() {
         this.setPreferredSize(new Dimension(PSP_WIDTH, F_HEIGHT));
         this.setBackground(Color.BLACK);
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 1));
-        this.add(new ProfilePanel());
-        this.add(new UtilityPanel());
+        pfpPanel = new ProfilePanel();
+        utilityPanel = new UtilityPanel();
+        this.add(pfpPanel);
+        this.add(utilityPanel);
     }
 
     public void loadPlaylists() {
@@ -57,6 +61,14 @@ public class PlaylistSelectionPanel extends JPanel {
         });
         list.setCellRenderer(new PlaylistCellRenderer());
         this.add(list);
+    }
+
+    public static ProfilePanel getPfpPanel() {
+        return pfpPanel;
+    }
+
+    public static UtilityPanel getUtilityPanel() {
+        return utilityPanel;
     }
 
     public DefaultListModel<Playlist> getListModel() {
