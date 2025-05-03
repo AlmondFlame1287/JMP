@@ -12,7 +12,7 @@ import java.awt.event.WindowEvent;
 import static com.player.utils.Constants.*;
 
 public class MFrame extends JFrame {
-    private LoginPanel loginPanel;
+    private final LoginPanel loginPanel;
 
     public MFrame() {
         loginPanel = new LoginPanel(this);
