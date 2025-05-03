@@ -8,20 +8,13 @@ import com.player.gui.panels.view.song.SongViewPanel;
 import javax.swing.*;
 
 public class ContentPanel extends JPanel {
-    private static ContentPanel instance = null;
     private static Profile profile;
 
     private static PlaylistSelectionPanel psp;
     private static PlaylistViewPanel pvp;
     private static SongViewPanel svp;
 
-    public static ContentPanel getInstance() {
-        if(instance == null)
-            instance = new ContentPanel();
-        return instance;
-    }
-
-    private ContentPanel() {
+    public ContentPanel() {
         this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
         psp = new PlaylistSelectionPanel();
