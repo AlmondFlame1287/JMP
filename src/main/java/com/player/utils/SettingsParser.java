@@ -1,11 +1,14 @@
 package com.player.utils;
 
+import com.player.Playlist;
+import com.player.Song;
 import com.player.gui.ContentPanel;
 import com.player.gui.panels.selection.PlaylistSelectionPanel;
 
 import java.io.*;
 import java.util.*;
 import java.awt.Color;
+import java.util.stream.Collectors;
 
 import static com.player.utils.Constants.SETTINGS_PATH;
 
@@ -48,7 +51,25 @@ public class SettingsParser {
     }
 
     private static void addDefaultSongScanDirs(String[] dirs) {
+        // Songs found in these directories will be added to a playlist
+        // named Default
+        if(dirs.length == 1) return; // 1 because first element of dirs is "default-dirs"
 
+        File dir;
+        List<File> songFiles;
+        final Playlist defaultPlaylist = new Playlist("Default");
+
+        for(int i = 1; i < dirs.length; i++) {
+            dir = new File(dirs[i]);
+
+            songFiles = Arrays.stream(Objects.requireNonNull(dir.listFiles()))
+                    .filter((file) -> file.getName().endsWith(".wav"))
+                    .collect(Collectors.toList());
+
+            songFiles.forEach(song -> defaultPlaylist.addSong(new Song(Song.stripNameOfExtension(song.getName()), song.getPath())));
+        }
+
+        ContentPanel.getProfile().addPlaylist(defaultPlaylist);
     }
 
     private static void parseBackgroundColors(String[] colorsHex) {
