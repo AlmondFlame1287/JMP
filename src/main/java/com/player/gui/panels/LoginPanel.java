@@ -6,6 +6,7 @@ import com.player.gui.customs.CustomTextField;
 import com.player.gui.customs.TransparentButton;
 import com.player.utils.Constants;
 import com.player.utils.GradiantGenerator;
+import com.player.utils.SettingsParser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,6 +69,7 @@ public class LoginPanel extends JPanel {
 
     private void changePanel() {
         parent.setContentPane(new ContentPanel());
+        SettingsParser.parseSettingsFile();
     }
 
     @Override
