@@ -12,13 +12,16 @@ import java.awt.event.WindowEvent;
 import static com.player.utils.Constants.*;
 
 public class MFrame extends JFrame {
+    private LoginPanel loginPanel;
+
     public MFrame() {
+        loginPanel = new LoginPanel(this);
         this.setTitle(APP_NAME);
         this.setSize(new Dimension(F_WIDTH, F_HEIGHT));
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setupMenuBar();
-        this.setContentPane(new LoginPanel(this));
+        this.setContentPane(loginPanel);
         this.setVisible(true);
         this.setupCloseEvent();
     }
@@ -48,6 +51,7 @@ public class MFrame extends JFrame {
 
         // TODO: Implement sign-out
         JMenuItem signOut = new JMenuItem("Sign out");
+        signOut.addActionListener(evt -> this.setContentPane(loginPanel));
         file.add(signOut);
 
         jmb.add(file);

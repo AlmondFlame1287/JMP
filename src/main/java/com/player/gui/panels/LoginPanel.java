@@ -67,7 +67,7 @@ public class LoginPanel extends JPanel {
     }
 
     private void changePanel() {
-        parent.setContentPane(ContentPanel.getInstance());
+        parent.setContentPane(new ContentPanel());
     }
 
     @Override
@@ -75,8 +75,6 @@ public class LoginPanel extends JPanel {
         super.paintComponent(g);
         GradiantGenerator.setGradientAsBackground(
                 (Graphics2D) g, new Color[] {
-//                    Color.decode("#accbee"),
-//                    Color.decode("#e7f0fd")
                         Color.decode("#3e403f"),
                         Color.decode("#232423")
                 }, this.getWidth(), this.getHeight(),
