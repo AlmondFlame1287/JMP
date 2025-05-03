@@ -11,8 +11,9 @@ public final class Constants {
     public static final int F_WIDTH = /*1920;*/  Toolkit.getDefaultToolkit().getScreenSize().width / 2;
     public static final int F_HEIGHT = /*1080;*/  Toolkit.getDefaultToolkit().getScreenSize().height / 2;
 
-    public static final Path PLAYLIST_PATH = Paths.get(System.getProperty("user.home") + "/JMPPlaylists").normalize();
-    public static final Path PROFILE_PATH = Paths.get(System.getProperty("user.home") + "/JMPProfiles").normalize();
+    public static final Path PLAYLIST_PATH = Paths.get(System.getProperty("user.home") + "/JMP/playlists").normalize();
+    public static final Path PROFILE_PATH = Paths.get(System.getProperty("user.home") + "/JMP/profiles").normalize();
+    public static final Path SETTINGS_PATH = Paths.get(System.getProperty("user.home") + "/JMP/settings").normalize();
 
     public enum GradientStyle {
         TOP_TO_BOTTOM,
