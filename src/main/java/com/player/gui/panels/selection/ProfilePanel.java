@@ -3,6 +3,7 @@ package com.player.gui.panels.selection;
 import com.player.Profile;
 import com.player.gui.ContentPanel;
 import com.player.gui.customs.CircularButton;
+import com.player.gui.dialogs.SettingsDialog;
 import com.player.utils.SettingsParser;
 
 import javax.swing.*;
@@ -17,8 +18,10 @@ public class ProfilePanel extends JPanel {
     private CircularButton profilePfp;
 
     public ProfilePanel() {
-        this.setBackground(SettingsParser.getColor("profile") == null ? Color.BLACK : SettingsParser.getColor("profile"));
+        this.setName("profile");
+        this.setBackground(SettingsParser.getColor(this.getName()));
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        SettingsDialog.addPanelToComboBox(this);
 
         this.init();
     }
