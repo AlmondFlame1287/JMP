@@ -20,8 +20,8 @@ public class SettingsDialog extends JDialog {
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.BLACK);
         this.getContentPane().setLayout(new FlowLayout());
-        this.setVisible(true);
         this.init();
+        this.setVisible(true);
     }
 
     public static void addPanelToComboBox(JPanel panel) {
