@@ -6,7 +6,6 @@ import com.player.gui.ContentPanel;
 import com.player.gui.dialogs.SettingsDialog;
 import com.player.gui.panels.view.playlist.PlaylistViewPanel;
 import com.player.gui.customs.renderers.PlaylistCellRenderer;
-import com.player.utils.SettingsParser;
 
 import javax.swing.*;
 
