@@ -63,6 +63,9 @@ public class Playlist {
         return this.playlistImageFile;
     }
 
+    public boolean isEmpty() {
+        return this.songs.isEmpty();
+    }
 //    public List<Song> getSongs() {
 //        return songs;
 //    }
