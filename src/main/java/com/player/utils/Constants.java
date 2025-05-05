@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public final class Constants {
-    public static final String APP_VER = "1.0.0";
+    public static final String APP_VER = "1.1.0";
     public static final String APP_NAME = "JMP " + APP_VER;
 
     public static final int F_WIDTH = /*1920;*/  Toolkit.getDefaultToolkit().getScreenSize().width / 2;
