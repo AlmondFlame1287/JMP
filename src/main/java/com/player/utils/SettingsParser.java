@@ -17,50 +17,56 @@ import static com.player.utils.Constants.SETTINGS_PATH;
  */
 public class SettingsParser {
     private static final Playlist defaultPlaylist = new Playlist("Default");
-    private static final List<Color> colorList = new ArrayList<>(5);
+    private static final File defaultDirFile = new File(SETTINGS_PATH + "/dirs.txt");
+    private static final File personalizationFile = new File(SETTINGS_PATH + "/colors.properties");
+    private static final Map<String, Color> panelToColorMap = new HashMap<>();
+    private static final List<String> defaultDirectories = new ArrayList<>();
 
     private SettingsParser() {}
 
-    public static void parseSettingsFile() {
-        final File settingsFile = new File(SETTINGS_PATH + "/settings.txt");
-
-        try(FileReader fr = new FileReader(settingsFile);
+    private static void parseDefaultDirs() {
+        try(FileReader fr = new FileReader(defaultDirFile);
             BufferedReader br = new BufferedReader(fr)) {
 
             String line;
-            String[] settings;
             while((line = br.readLine()) != null) {
-                settings = line.split(",");
-
-                switch (settings[0]) {
-                    case "colors":
-                        parseBackgroundColors(settings);
-                        break;
-                    case "default-dirs":
-                        addDefaultSongScanDirs(settings);
-                        break;
-                    default:
-                        break;
-                }
+                defaultDirectories.add(line);
             }
 
-        } catch (FileNotFoundException fnfe) {
-            System.err.println("Settings file wasn't found:" + fnfe.getMessage() + ". Unable to load settings");
+            addSongsToDefaultPlaylist();
         } catch (IOException ioe) {
-            System.err.println("Something went wrong: " + ioe.getMessage());
+            System.err.println("Something went wrong with parsing the default dirs: " + ioe.getMessage());
         }
     }
 
-    private static void addDefaultSongScanDirs(String[] dirs) {
-        // Songs found in these directories will be added to a playlist
-        // named Default
-        if(dirs.length == 1) return; // 1 because first element of dirs is "default-dirs"
+    private static void parseColors() {
+        final Properties p = new Properties();
 
+        try(FileReader fr = new FileReader(personalizationFile);
+            BufferedReader br = new BufferedReader(fr)) {
+            p.load(br);
+
+            final Set<?> set = p.entrySet();
+
+            for (Object o : set) {
+                Map.Entry<?, ?> entry = (Map.Entry<?, ?>) o;
+                final String panelName = (String) entry.getKey();
+                final String color = "#" + entry.getValue();
+
+                System.out.println("Color: " + color);
+                panelToColorMap.put(panelName, Color.decode(color));
+            }
+        } catch (IOException ioe) {
+            System.err.println("Something went wrong with parsing the settings file: " + ioe.getMessage());
+        }
+    }
+
+    public static void addSongsToDefaultPlaylist() {
         File dir;
         List<File> songFiles;
 
-        for(int i = 1; i < dirs.length; i++) {
-            dir = new File(dirs[i]);
+        for(String path : defaultDirectories) {
+            dir = new File(path);
 
             songFiles = Arrays.stream(Objects.requireNonNull(dir.listFiles()))
                     .filter((file) -> file.getName().endsWith(".wav"))
@@ -70,34 +76,71 @@ public class SettingsParser {
         }
     }
 
-    private static void parseBackgroundColors(String[] colorsHex) {
-        // Colors will be in this order:
-        // PSP, PVP, AVP, SVP
-        for (int i = 1; i < colorsHex.length; i++) {
-            colorList.add(Color.decode(colorsHex[i]));
+    public static Playlist getDefaultPlaylist() {
+        return defaultPlaylist;
+    }
+
+    private static void saveDefaultDirsToFile() {
+        if(!defaultDirFile.exists()) {
+            try { defaultDirFile.createNewFile(); }
+            catch (IOException ioe) { System.err.println("Something went wrong with creating the settings file: " + ioe.getMessage()); }
         }
+
+        try(FileWriter fw = new FileWriter(defaultDirFile, true);
+            BufferedWriter bw = new BufferedWriter(fw)) {
+
+            for(String dir : defaultDirectories)
+                bw.write(dir + "\n");
+
+        } catch (IOException ioe) {
+            System.err.println("Something went wrong with writing to settings file: " + ioe.getMessage());
+        }
+    }
+
+    private static void savePanelColorsToFile() {
+        final Properties p = new Properties();
+
+        try(FileWriter fw = new FileWriter(personalizationFile);
+            BufferedWriter bw = new BufferedWriter(fw)) {
+
+            if(panelToColorMap.isEmpty()) {
+                setColors(p);
+            } else {
+                for(Map.Entry<String, Color> entry : panelToColorMap.entrySet()) {
+                    p.setProperty(entry.getKey(), Integer.toHexString(entry.getValue().getRGB()));
+                }
+            }
+
+            p.store(bw, "");
+        } catch (IOException ioe) {
+            System.err.println("Something went wrong saving the colors to file: " + ioe.getMessage());
+        }
+    }
+
+    private static void setColors(Properties p) throws IOException {
+        final String blackToHex = "000000";
+
+        p.setProperty("profile", blackToHex);
+        p.setProperty("utility", blackToHex);
+        p.setProperty("album", "2b2929");
+        p.setProperty("song", blackToHex);
+    }
+
+    public static void saveSettings() {
+        saveDefaultDirsToFile();
+        savePanelColorsToFile();
     }
 
     public static Color getColor(String panelName) {
-        if (colorList.isEmpty()) return null;
-
-        switch (panelName) {
-            case "psp":
-            case "profile":
-            case "utility":
-                return colorList.get(0);
-            case "pvp":
-                return colorList.get(1);
-            case "avp":
-                return colorList.get(2);
-            case "svp":
-                return colorList.get(3);
-            default:
-                return null;
-        }
+        return panelToColorMap.get(panelName);
     }
 
-    public static Playlist getDefaultPlaylist() {
-        return defaultPlaylist;
+    public static void addScanDir(String dir) {
+        defaultDirectories.add(dir);
+    }
+
+    public static void parseSettings() {
+        parseDefaultDirs();
+        parseColors();
     }
 }

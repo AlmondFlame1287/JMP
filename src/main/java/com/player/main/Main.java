@@ -11,7 +11,8 @@ import java.io.File;
 public class Main {
     public static void main(String[] args) {
         DirectoryInitializer.initializeDirectories();
-        SettingsParser.parseSettingsFile();
+        SettingsParser.saveSettings();
+        SettingsParser.parseSettings();
         SwingUtilities.invokeLater(MFrame::new);
     }
 
