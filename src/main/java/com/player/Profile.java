@@ -100,6 +100,8 @@ public class Profile {
     }
 
     public void addPlaylist(Playlist playlist) {
+        if(playlist.isEmpty()) return;
+
         this.playlists.add(playlist);
         ContentPanel.getPsp().getListModel().addElement(playlist);
         System.out.println("Added playlist " + playlist.getName());
