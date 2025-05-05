@@ -1,6 +1,7 @@
 package com.player.gui.panels.view.playlist;
 
 import com.player.gui.ContentPanel;
+import com.player.gui.dialogs.SettingsDialog;
 import com.player.gui.panels.selection.PlaylistSelectionPanel;
 import com.player.utils.SettingsParser;
 
@@ -14,11 +15,13 @@ public class AlbumViewPanel extends JPanel {
     private final JLabel albumTitle;
 
     public AlbumViewPanel() {
-        this.setBackground(SettingsParser.getColor("avp") == null ? Color.decode("#2b2929") : SettingsParser.getColor("avp"));
+        this.setName("album");
+        this.setBackground(SettingsParser.getColor(this.getName()));
         this.setPreferredSize(new Dimension(PVP_WIDTH, ALBUM_HEIGHT));
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         albumTitle = new JLabel();
+        SettingsDialog.addPanelToComboBox(this);
         this.add(albumTitle);
     }
 

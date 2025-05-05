@@ -2,6 +2,7 @@ package com.player.gui.panels.view.song;
 
 import com.player.Song;
 import com.player.gui.customs.TransparentButton;
+import com.player.gui.dialogs.SettingsDialog;
 import com.player.sound.AudioPlayer;
 import com.player.utils.SettingsParser;
 
@@ -18,10 +19,12 @@ public class SongViewPanel extends JPanel {
 
 
     public SongViewPanel() {
+        this.setName("song");
         this.setPreferredSize(new Dimension(SVP_WIDTH, F_HEIGHT));
-        this.setBackground(SettingsParser.getColor("svp") == null ? Color.BLACK : SettingsParser.getColor("svp"));
+        this.setBackground(SettingsParser.getColor(this.getName()));
         this.setLayout(new GridBagLayout());
         this.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        SettingsDialog.addPanelToComboBox(this);
         this.init();
     }
 
