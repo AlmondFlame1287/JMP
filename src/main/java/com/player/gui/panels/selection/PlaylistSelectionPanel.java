@@ -6,6 +6,7 @@ import com.player.gui.ContentPanel;
 import com.player.gui.dialogs.SettingsDialog;
 import com.player.gui.panels.view.playlist.PlaylistViewPanel;
 import com.player.gui.customs.renderers.PlaylistCellRenderer;
+import com.player.utils.SettingsParser;
 
 import javax.swing.*;
 
@@ -24,6 +25,7 @@ public class PlaylistSelectionPanel extends JPanel {
     public PlaylistSelectionPanel() {
         this.setPreferredSize(new Dimension(PSP_WIDTH, F_HEIGHT));
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 1));
+        this.setBackground(SettingsParser.getColor("profile"));
         pfpPanel = new ProfilePanel();
         utilityPanel = new UtilityPanel();
         this.add(pfpPanel);

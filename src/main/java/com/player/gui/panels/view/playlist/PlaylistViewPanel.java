@@ -6,6 +6,7 @@ import com.player.gui.ContentPanel;
 import com.player.gui.customs.renderers.SongCellRenderer;
 import com.player.gui.dialogs.SettingsDialog;
 import com.player.gui.panels.selection.PlaylistSelectionPanel;
+import com.player.utils.SettingsParser;
 
 import javax.swing.*;
 
@@ -18,10 +19,9 @@ public class PlaylistViewPanel extends JPanel {
     private final AlbumViewPanel avp;
 
     public PlaylistViewPanel() {
-        this.setName("playlist");
         this.avp = new AlbumViewPanel();
         this.setPreferredSize(new Dimension(PVP_WIDTH, F_HEIGHT - avp.getHeight()));
-//        this.setBackground(SettingsParser.getColor("pvp") == null ? Color.decode("#141414") : SettingsParser.getColor("pvp"));
+        this.setBackground(SettingsParser.getColor("album"));
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 1));
         SettingsDialog.addPanelToComboBox(this);
         this.add(this.avp);
