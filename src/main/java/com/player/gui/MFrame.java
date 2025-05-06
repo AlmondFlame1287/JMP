@@ -52,7 +52,10 @@ public class MFrame extends JFrame {
 
         JMenuItem signOut = new JMenuItem("Sign out");
         file.add(signOut);
-        signOut.addActionListener(evt -> this.setContentPane(loginPanel));
+        signOut.addActionListener(evt -> {
+            MFrame.setMenuBarVisibility(false);
+            this.setContentPane(loginPanel);
+        });
 
         JMenuItem settings = new JMenuItem("Settings");
         preferences.add(settings);
