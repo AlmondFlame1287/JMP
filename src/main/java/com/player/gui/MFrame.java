@@ -14,6 +14,7 @@ import static com.player.utils.Constants.*;
 
 public class MFrame extends JFrame {
     private final LoginPanel loginPanel;
+    private static final JMenuBar menuBar = new JMenuBar();
 
     public MFrame() {
         loginPanel = new LoginPanel(this);
@@ -41,14 +42,13 @@ public class MFrame extends JFrame {
     }
 
     private void setupMenuBar() {
-        JMenuBar jmb = new JMenuBar();
         JMenu file = this.createCustomJMenu("File");
         JMenu edit = this.createCustomJMenu("Edit");
         JMenu view = this.createCustomJMenu("View");
         JMenu preferences = this.createCustomJMenu("Preferences");
 
-        jmb.setBackground(Color.decode("#141414"));
-        jmb.setBorderPainted(false);
+        menuBar.setBackground(Color.decode("#141414"));
+        menuBar.setBorderPainted(false);
 
         JMenuItem signOut = new JMenuItem("Sign out");
         file.add(signOut);
@@ -56,17 +56,19 @@ public class MFrame extends JFrame {
 
         JMenuItem settings = new JMenuItem("Settings");
         preferences.add(settings);
-        settings.addActionListener(evt -> {
-            if(!this.getContentPane().getName().equals("ContentPanel")) return;
-            new SettingsDialog();
-        });
+        settings.addActionListener(evt -> new SettingsDialog());
 
-        jmb.add(file);
-        jmb.add(edit);
-        jmb.add(view);
-        jmb.add(preferences);
+        menuBar.add(file);
+        menuBar.add(edit);
+        menuBar.add(view);
+        menuBar.add(preferences);
 
-        this.setJMenuBar(jmb);
+        menuBar.setVisible(false);
+        this.setJMenuBar(menuBar);
+    }
+
+    public static void setMenuBarVisibility(boolean tf) {
+        menuBar.setVisible(tf);
     }
 
     private JMenu createCustomJMenu(String txt) {

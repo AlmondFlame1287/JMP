@@ -15,6 +15,7 @@ public class ContentPanel extends JPanel {
     private static SongViewPanel svp;
 
     public ContentPanel() {
+        MFrame.setMenuBarVisibility(true);
         this.setName("ContentPanel");
         this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
