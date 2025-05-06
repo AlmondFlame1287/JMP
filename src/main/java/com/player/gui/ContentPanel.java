@@ -15,6 +15,7 @@ public class ContentPanel extends JPanel {
     private static SongViewPanel svp;
 
     public ContentPanel() {
+        this.setName("ContentPanel");
         this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
         psp = new PlaylistSelectionPanel();

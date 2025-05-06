@@ -56,7 +56,10 @@ public class MFrame extends JFrame {
 
         JMenuItem settings = new JMenuItem("Settings");
         preferences.add(settings);
-        settings.addActionListener(evt -> new SettingsDialog());
+        settings.addActionListener(evt -> {
+            if(!this.getContentPane().getName().equals("ContentPanel")) return;
+            new SettingsDialog();
+        });
 
         jmb.add(file);
         jmb.add(edit);
