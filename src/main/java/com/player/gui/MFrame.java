@@ -32,10 +32,11 @@ public class MFrame extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if(ContentPanel.getProfile() == null) System.exit(0);
+                if(ContentPanel.getProfile() != null) {
+                    ContentPanel.getProfile().savePfpToFile();
+                    ContentPanel.getProfile().savePlaylistToFile();
+                }
 
-                ContentPanel.getProfile().savePfpToFile();
-                ContentPanel.getProfile().savePlaylistToFile();
                 super.windowClosing(e);
             }
         });
@@ -50,7 +51,7 @@ public class MFrame extends JFrame {
         menuBar.setBackground(Color.decode("#141414"));
         menuBar.setBorderPainted(false);
 
-        JMenuItem signOut = new JMenuItem("Sign out");
+        JMenuItem signOut = new JMenuItem("Sign out"); /*createCustomJMenuItem("Sign out");*/
         file.add(signOut);
         signOut.addActionListener(evt -> {
             MFrame.setMenuBarVisibility(false);
@@ -75,13 +76,9 @@ public class MFrame extends JFrame {
     }
 
     private JMenu createCustomJMenu(String txt) {
-        JMenu menu = new JMenu(txt) {
-            @Override
-            public void paintBorder(Graphics g) {
+        JMenu menu = new JMenu(txt);
 
-            }
-        };
-
+        menu.setBorderPainted(false);
         menu.setOpaque(false);
         menu.setForeground(Color.WHITE);
 
@@ -101,4 +98,27 @@ public class MFrame extends JFrame {
 
         return menu;
     }
+
+//    private JMenuItem createCustomJMenuItem(String text) {
+//        JMenuItem newItem = new JMenuItem(text);
+//
+//        newItem.setBackground(Color.decode("#141414"));
+//        newItem.setForeground(Color.WHITE);
+//
+//        newItem.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseEntered(MouseEvent e) {
+//                newItem.setForeground(new Color(255, 255, 255, 200));
+//                repaint();
+//            }
+//
+//            @Override
+//            public void mouseExited(MouseEvent e) {
+//                newItem.setForeground(Color.WHITE);
+//                repaint();
+//            }
+//        });
+//
+//        return newItem;
+//    }
 }

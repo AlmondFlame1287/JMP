@@ -16,7 +16,7 @@ import static com.player.utils.Constants.F_HEIGHT;
 
 public class SongViewPanel extends JPanel {
     private JButton pausePlay;
-
+    private JLabel songCurrentlyPlaying;
 
     public SongViewPanel() {
         this.setName("song");
@@ -24,7 +24,9 @@ public class SongViewPanel extends JPanel {
         this.setBackground(SettingsParser.getColor(this.getName()));
         this.setLayout(new GridBagLayout());
         this.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+
         SettingsDialog.addPanelToComboBox(this);
+
         this.init();
     }
 
@@ -32,14 +34,22 @@ public class SongViewPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         TransparentButton prev = new TransparentButton("|<");
         this.pausePlay = new TransparentButton("Play");
+        this.songCurrentlyPlaying = new JLabel();
+        this.songCurrentlyPlaying.setForeground(new Color(255, 255, 255, 75));
         TransparentButton next = new TransparentButton(">|");
         JSlider volumeSlider = new JSlider();
 
         this.setupSlider(volumeSlider);
 
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
+        gbc.gridwidth = 3;
         gbc.gridy = 0;
+        this.add(songCurrentlyPlaying, gbc);
+
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         this.add(prev, gbc);
 
         gbc.gridx = 1;
@@ -52,7 +62,7 @@ public class SongViewPanel extends JPanel {
         this.add(next, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.weightx = 1;
         this.add(volumeSlider, gbc);
@@ -83,7 +93,7 @@ public class SongViewPanel extends JPanel {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(Color.LIGHT_GRAY);
-                g2.fillOval(thumbRect.x, thumbRect.y, thumbRect.width, thumbRect.height);
+                g2.fillRoundRect(thumbRect.x, thumbRect.y, thumbRect.width, thumbRect.height, 5, 5);
                 g2.dispose();
             }
         });
@@ -91,6 +101,7 @@ public class SongViewPanel extends JPanel {
 
     public void setToPlay(Song toPlay) {
         AudioPlayer.setFile(toPlay.getSongPath().toFile());
+        this.songCurrentlyPlaying.setText(toPlay.getName());
     }
 
     private void startStop() {
@@ -100,9 +111,10 @@ public class SongViewPanel extends JPanel {
         if(!AudioPlayer.isPlaying()) {
             t.start();
             this.pausePlay.setText("Pause");
-        } else {
-            audioPlayer.kill();
-            this.pausePlay.setText("Play");
+            return;
         }
+
+        audioPlayer.kill();
+        this.pausePlay.setText("Play");
     }
 }
