@@ -1,6 +1,7 @@
 package com.player.gui.panels.view.song;
 
 import com.player.Song;
+import com.player.gui.ContentPanel;
 import com.player.gui.customs.TransparentButton;
 import com.player.gui.dialogs.SettingsDialog;
 import com.player.sound.AudioPlayer;
@@ -10,6 +11,8 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
 
 import java.awt.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.player.utils.Constants.*;
 import static com.player.utils.Constants.F_HEIGHT;
@@ -17,6 +20,13 @@ import static com.player.utils.Constants.F_HEIGHT;
 public class SongViewPanel extends JPanel {
     private JButton pausePlay;
     private JLabel songCurrentlyPlaying;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+
+    private int nextSongIndx;
+    private int prevSongIndx;
+
+    private Song nextSong;
+    private Song prevSong;
 
     public SongViewPanel() {
         this.setName("song");
@@ -40,6 +50,8 @@ public class SongViewPanel extends JPanel {
         JSlider volumeSlider = new JSlider();
 
         this.setupSlider(volumeSlider);
+
+        // TODO: Refactor this mess
 
         gbc.gridx = 0;
         gbc.gridwidth = 3;
@@ -69,7 +81,26 @@ public class SongViewPanel extends JPanel {
 
         // TODO: Find a way to select prev and next songs
 
-        this.pausePlay.addActionListener(evt -> startStop());
+        this.pausePlay.addActionListener(evt -> {
+            if(AudioPlayer.isPlaying()) {
+                stop();
+                return;
+            }
+            start();
+        });
+
+        next.addActionListener(evt -> {
+            stop();
+            setToPlay(nextSong, nextSongIndx);
+            start();
+        });
+
+        prev.addActionListener(evt -> {
+            stop();
+            setToPlay(prevSong, prevSongIndx);
+            start();
+        });
+
         volumeSlider.addChangeListener(evt -> AudioPlayer.setVolume(volumeSlider.getValue()));
     }
 
@@ -99,22 +130,31 @@ public class SongViewPanel extends JPanel {
         });
     }
 
-    public void setToPlay(Song toPlay) {
+    public void setPrevious(Song prev, int indx) {
+        this.prevSong = prev;
+        this.prevSongIndx = indx;
+        System.out.println("Previous song: " + prev.getName());
+    }
+
+    public void setToPlay(Song toPlay, int indx) {
         AudioPlayer.setFile(toPlay.getSongPath().toFile());
+        ContentPanel.getPvp().getSongsToDisplay().setSelectedIndex(indx);
         this.songCurrentlyPlaying.setText(toPlay.getName());
     }
 
-    private void startStop() {
-        AudioPlayer audioPlayer = AudioPlayer.getInstance();
-        Thread t = new Thread(audioPlayer);
+    public void setNext(Song next, int indx) {
+        this.nextSong = next;
+        this.nextSongIndx = indx;
+        System.out.println("Next song: " + next.getName());
+    }
 
-        if(!AudioPlayer.isPlaying()) {
-            t.start();
-            this.pausePlay.setText("Pause");
-            return;
-        }
+    private void start() {
+        executor.execute(AudioPlayer.getInstance());
+        this.pausePlay.setText("Pause");
+    }
 
-        audioPlayer.kill();
+    private void stop() {
+        AudioPlayer.getInstance().kill();
         this.pausePlay.setText("Play");
     }
 }

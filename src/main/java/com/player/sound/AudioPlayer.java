@@ -17,21 +17,10 @@ public class AudioPlayer implements Runnable {
     private SourceDataLine line;
     private static boolean playing;
     private static FloatControl volumeControl;
-    private static int bytesWrittenToLine;
+    private static long bytesWrittenToLine;
 
     private AudioPlayer() {
         bytesWrittenToLine = 0;
-
-        try {
-            in = getAudioInputStream(file);
-            outFormat = getOutFormat(in.getFormat());
-            Info info = new Info(SourceDataLine.class, outFormat);
-            line = (SourceDataLine) AudioSystem.getLine(info);
-        } catch (LineUnavailableException | UnsupportedAudioFileException lue) {
-            System.err.println("Something went wrong: " + lue.getMessage());
-        } catch (IOException ioe) {
-            System.err.println("File exception: " + ioe.getMessage());
-        }
     }
 
     public static AudioPlayer getInstance() {
@@ -65,10 +54,12 @@ public class AudioPlayer implements Runnable {
     }
 
     private void play() {
-        if (line == null) return;
-
         try {
             in = getAudioInputStream(file);
+            outFormat = getOutFormat(in.getFormat());
+            Info info = new Info(SourceDataLine.class, outFormat);
+            line = (SourceDataLine) AudioSystem.getLine(info);
+
             line.open(outFormat);
             line.start();
 
