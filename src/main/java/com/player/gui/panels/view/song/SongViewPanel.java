@@ -2,14 +2,14 @@ package com.player.gui.panels.view.song;
 
 import com.player.Song;
 import com.player.gui.ContentPanel;
+import com.player.gui.customs.ProgressBar;
+import com.player.gui.customs.Slider;
 import com.player.gui.customs.TransparentButton;
 import com.player.gui.dialogs.SettingsDialog;
 import com.player.sound.AudioPlayer;
 import com.player.utils.SettingsParser;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.basic.BasicSliderUI;
 
 import java.awt.*;
 import java.util.concurrent.ExecutorService;
@@ -19,11 +19,13 @@ import static com.player.utils.Constants.*;
 import static com.player.utils.Constants.F_HEIGHT;
 
 public class SongViewPanel extends JPanel {
-    private JButton pausePlay;
-    private JLabel songCurrentlyPlaying;
+    private final JButton pausePlay;
+    private final JLabel songCurrentlyPlaying;
     private final ExecutorService executor;
-    private final JSlider volumeSlider;
-    private final JProgressBar songPercentage;
+    private final Slider volumeSlider;
+    private final ProgressBar songPercentage;
+    private final JLabel currentSongPosition;
+    private final JLabel songDuration;
 
     private int nextSongIndx;
     private int prevSongIndx;
@@ -32,10 +34,13 @@ public class SongViewPanel extends JPanel {
     private Song prevSong;
 
     public SongViewPanel() {
-        executor = Executors.newSingleThreadExecutor();
-        volumeSlider = new JSlider();
-        songPercentage = this.setupProgressBar();
-
+        this.executor = Executors.newSingleThreadExecutor();
+        this.volumeSlider = new Slider();
+        this.songPercentage = new ProgressBar();
+        this.pausePlay = new TransparentButton("Play");
+        this.currentSongPosition = new JLabel("0:00");
+        this.songCurrentlyPlaying = new JLabel();
+        this.songDuration = new JLabel();
 
         this.setName("song");
         this.setPreferredSize(new Dimension(SVP_WIDTH, F_HEIGHT));
@@ -51,16 +56,20 @@ public class SongViewPanel extends JPanel {
     private void init() {
         GridBagConstraints gbc = new GridBagConstraints();
         TransparentButton prev = new TransparentButton("|<");
-        this.pausePlay = new TransparentButton("Play");
-        this.songCurrentlyPlaying = new JLabel();
-        this.songCurrentlyPlaying.setForeground(new Color(255, 255, 255, 75));
         TransparentButton next = new TransparentButton(">|");
 
-        this.setupSlider(volumeSlider);
+        this.songCurrentlyPlaying.setForeground(new Color(255, 255, 255, 75));
+        this.volumeSlider.setBackground(this.getBackground());
+
         this.songPercentage.setValue(0);
 
-        // TODO: Refactor this mess
+        this.addComponents(prev, next, gbc);
+        this.addButtonListeners(prev, next);
 
+        volumeSlider.addChangeListener(evt -> AudioPlayer.setVolume(volumeSlider.getValue()));
+    }
+
+    private void addComponents(TransparentButton prev, TransparentButton next, GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridwidth = 3;
         gbc.gridy = 0;
@@ -93,16 +102,18 @@ public class SongViewPanel extends JPanel {
         gbc.weightx = 1;
         this.add(songPercentage, gbc);
 
-        // TODO: Find a way to select prev and next songs
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        this.add(currentSongPosition, gbc);
 
-        this.pausePlay.addActionListener(evt -> {
-            if(AudioPlayer.isPlaying()) {
-                stop();
-                return;
-            }
-            start();
-        });
+        gbc.gridx = 3;
+        gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        this.add(songDuration, gbc);
+    }
 
+    private void addButtonListeners(TransparentButton prev, TransparentButton next) {
         next.addActionListener(evt -> {
             stop();
             setToPlay(nextSong, nextSongIndx);
@@ -115,76 +126,15 @@ public class SongViewPanel extends JPanel {
             start();
         });
 
-        volumeSlider.addChangeListener(evt -> AudioPlayer.setVolume(volumeSlider.getValue()));
-    }
-
-    private JProgressBar setupProgressBar() {
-        return new JProgressBar() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                int width = getWidth();
-                int height = getHeight();
-                int arc = height;
-                int progressWidth = (int) (((double) getValue() / getMaximum()) * width);
-
-                // Track
-                g2.setColor(new Color(40, 40, 40));
-                g2.fillRoundRect(0, 0, width, height, arc, arc);
-
-                // Progress gradient
-                GradientPaint gradient = new GradientPaint(
-                        0, 0, new Color(30, 215, 96),
-                        progressWidth, 0, new Color(25, 180, 80));
-                g2.setPaint(gradient);
-                g2.fillRoundRect(0, 0, progressWidth, height, arc, arc);
-
-                // Soft glow
-                g2.setColor(new Color(30, 215, 96, 80));
-                g2.fillRoundRect(0, 0, progressWidth, height, arc, arc);
-
-                g2.dispose();
+        this.pausePlay.addActionListener(evt -> {
+            if(AudioPlayer.isPlaying()) {
+                stop();
+                return;
             }
-
-            @Override
-            public boolean isOpaque() {
-                return false;
-            }
-
-            @Override
-            public Border getBorder() {
-                return BorderFactory.createEmptyBorder();
-            }
-        };
-    }
-
-    private void setupSlider(JSlider slider) {
-        slider.setFocusable(false);
-        slider.setPaintTicks(false);
-        slider.setPaintLabels(false);
-        slider.setBackground(this.getBackground());
-
-        slider.setUI(new BasicSliderUI(slider) {
-            @Override
-            public void paintTrack(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(Color.WHITE);
-                g2.fillRoundRect(trackRect.x, trackRect.y + trackRect.height / 2 - 2, trackRect.width, 4, 4, 4);
-            }
-
-            @Override
-            public void paintThumb(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(Color.LIGHT_GRAY);
-                g2.fillRoundRect(thumbRect.x, thumbRect.y, thumbRect.width, thumbRect.height, 5, 5);
-                g2.dispose();
-            }
+            start();
         });
     }
+
 
     public void setPrevious(Song prev, int indx) {
         this.prevSong = prev;
@@ -195,7 +145,17 @@ public class SongViewPanel extends JPanel {
     public void setToPlay(Song toPlay, int indx) {
         AudioPlayer.setFile(toPlay.getSongPath().toFile());
         ContentPanel.getPvp().getSongsToDisplay().setSelectedIndex(indx);
+
         this.songCurrentlyPlaying.setText(toPlay.getName());
+        this.updateSongDuration();
+    }
+
+    private void updateSongDuration() {
+        final int mins = AudioPlayer.getSongDurationInSeconds() / 60;
+        final int secs = AudioPlayer.getSongDurationInSeconds() % 60;
+
+        String songDuration = mins + ":" + ((secs < 10) ? "0" + secs : secs);
+        this.songDuration.setText(songDuration);
     }
 
     public void setNext(Song next, int indx) {
@@ -206,11 +166,18 @@ public class SongViewPanel extends JPanel {
     }
 
     private void start() {
+        if(!AudioPlayer.isFileSet()) return;
+
         executor.execute(AudioPlayer.getInstance());
         SwingWorker<Void, Void> progressBarWorker = getProgressBarWorker();
 
         progressBarWorker.execute();
         this.pausePlay.setText("Pause");
+    }
+
+    private void stop() {
+        AudioPlayer.getInstance().kill();
+        this.pausePlay.setText("Play");
     }
 
     private SwingWorker<Void, Void> getProgressBarWorker() {
@@ -219,11 +186,8 @@ public class SongViewPanel extends JPanel {
             protected Void doInBackground() throws Exception {
                 // (read_size / total_song_size) * 100
                 while(AudioPlayer.isPlaying()) {
-                    SwingUtilities.invokeLater(() ->
-                            songPercentage.setValue(
-                                (int) ((AudioPlayer.getBytesWrittenToLine() * 100.0f) / AudioPlayer.getDataSize()
-                            )
-                    ));
+                    SwingUtilities.invokeLater(() -> updateSongPercentage());
+
                     if(songPercentage.getValue() == 100) return null;
                     Thread.sleep(200);
                 }
@@ -234,8 +198,17 @@ public class SongViewPanel extends JPanel {
         };
     }
 
-    private void stop() {
-        AudioPlayer.getInstance().kill();
-        this.pausePlay.setText("Play");
+    private void updateSongPercentage() {
+        songPercentage.setValue(
+                (int) ((AudioPlayer.getBytesWrittenToLine() * 100.0f) / AudioPlayer.getDataSize()));
+
+        final long currentSongSecondsTotal = (AudioPlayer.getBytesWrittenToLine() / AudioPlayer.getBytesPerSecond());
+
+        final int currentSongMinutes = (int) (currentSongSecondsTotal / 60);
+        final int currentSongSeconds = (int) (currentSongSecondsTotal % 60);
+
+        String songPercentagePosition = currentSongMinutes + ":" + ((currentSongSeconds < 10) ? "0" + currentSongSeconds : currentSongSeconds);
+
+        currentSongPosition.setText(songPercentagePosition);
     }
 }

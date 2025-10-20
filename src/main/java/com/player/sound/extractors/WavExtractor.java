@@ -37,12 +37,11 @@ public class WavExtractor implements HeaderExtractor {
         System.out.println("--------------");
     }
 
-    private int getBytesPerSecond() {
+    @Override
+    public int getBytesPerSecond() {
         int bytesPerSecond = toInt(new byte[]{
                 header[28], header[29], header[30], header[31]
         });
-
-        System.out.println("Bytes per second: " + bytesPerSecond);
 
         return bytesPerSecond;
     }

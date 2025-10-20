@@ -49,6 +49,10 @@ public class AudioPlayer implements Runnable {
         extractor = selectExtractor(file);
     }
 
+    public static boolean isFileSet() {
+        return !(file == null);
+    }
+
     private static HeaderExtractor selectExtractor(File file) {
 //        if(file.getName().endsWith(".wav"))
 //            return new WavExtractor(file);
@@ -120,7 +124,7 @@ public class AudioPlayer implements Runnable {
         long bytesSkipped = in.skip(bytesWrittenToLine);
         System.out.println("Bytes skipped: " + bytesSkipped);
 
-        final byte[] buffer = new byte[line.getBufferSize()]; // A middle-buffer that's the same size as the line buffer
+        final byte[] buffer = new byte[extractor.getBytesPerSecond()]; // A middle-buffer that's the same size as the line buffer
         for (int i = 0; i != -1; i = in.read(buffer, 0, buffer.length)) { // Read buffer.length bytes into buffer, with an offset of 0
             bytesWrittenToLine += line.write(buffer, 0, i); // Write the data i bytes from buffer to the line with an offset of 0
                                                                 // Once we have the number of bytes actually written,
@@ -135,5 +139,9 @@ public class AudioPlayer implements Runnable {
 
     public static long getDataSize() {
         return extractor.getDataSize();
+    }
+
+    public static int getBytesPerSecond() {
+        return extractor.getBytesPerSecond();
     }
 }
