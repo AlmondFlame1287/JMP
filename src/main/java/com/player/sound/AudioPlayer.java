@@ -20,6 +20,7 @@ public class AudioPlayer implements Runnable {
     private static FloatControl volumeControl;
     private static long bytesWrittenToLine;
     private static HeaderExtractor extractor;
+    private static int oldPercent = 50;
 
     private AudioPlayer() {
         bytesWrittenToLine = 0;
@@ -73,7 +74,7 @@ public class AudioPlayer implements Runnable {
             line.start();
 
             volumeControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
-            setVolume(50);
+            setVolume(oldPercent);
 
             stream(getAudioInputStream(outFormat, in), line);
         } catch (LineUnavailableException | IOException | UnsupportedAudioFileException unlioe) {
@@ -87,6 +88,8 @@ public class AudioPlayer implements Runnable {
 
     public static void setVolume(int percent) {
         if(volumeControl == null) return;
+
+        oldPercent = percent;
 
         System.out.println("Current:" + volumeControl.getValue());
         final float min = volumeControl.getMinimum();
