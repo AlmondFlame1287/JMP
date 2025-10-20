@@ -1,5 +1,8 @@
 package com.player.sound;
 
+import com.player.sound.extractors.HeaderExtractor;
+import com.player.sound.extractors.WavExtractor;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -11,13 +14,12 @@ import static javax.sound.sampled.AudioFormat.Encoding.PCM_SIGNED;
 
 public class AudioPlayer implements Runnable {
     private static AudioPlayer instance;
-    private AudioInputStream in;
-    private AudioFormat outFormat;
     private static File file;
     private SourceDataLine line;
     private static boolean playing;
     private static FloatControl volumeControl;
     private static long bytesWrittenToLine;
+    private static HeaderExtractor extractor;
 
     private AudioPlayer() {
         bytesWrittenToLine = 0;
@@ -43,6 +45,13 @@ public class AudioPlayer implements Runnable {
     public static void setFile(File file) {
         bytesWrittenToLine = 0; // Reset the number of bytesWritten so that when selecting a new song, we don't skip said bytes
         AudioPlayer.file = file;
+        extractor = selectExtractor(file);
+    }
+
+    private static HeaderExtractor selectExtractor(File file) {
+//        if(file.getName().endsWith(".wav"))
+//            return new WavExtractor(file);
+        return new WavExtractor(file);
     }
 
     public void kill() {
@@ -55,8 +64,8 @@ public class AudioPlayer implements Runnable {
 
     private void play() {
         try {
-            in = getAudioInputStream(file);
-            outFormat = getOutFormat(in.getFormat());
+            AudioInputStream in = getAudioInputStream(file);
+            AudioFormat outFormat = getOutFormat(in.getFormat());
             Info info = new Info(SourceDataLine.class, outFormat);
             line = (SourceDataLine) AudioSystem.getLine(info);
 
@@ -70,6 +79,10 @@ public class AudioPlayer implements Runnable {
         } catch (LineUnavailableException | IOException | UnsupportedAudioFileException unlioe) {
             throw new IllegalStateException(unlioe);
         }
+    }
+
+    public static long getBytesWrittenToLine() {
+        return bytesWrittenToLine;
     }
 
     public static void setVolume(int percent) {
@@ -111,5 +124,13 @@ public class AudioPlayer implements Runnable {
                                                                 // we can skip that same amount of bytes next time we
                                                                 // start the stream
         }
+    }
+
+    public static int getSongDurationInSeconds() {
+        return extractor.getDurationInSeconds();
+    }
+
+    public static long getDataSize() {
+        return extractor.getDataSize();
     }
 }
