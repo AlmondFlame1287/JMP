@@ -18,8 +18,6 @@ public class WavExtractor implements HeaderExtractor {
         this.findIDs();
     }
 
-    // TODO: Find information programmatically
-
     private void readHeader() {
         try(FileInputStream fis = new FileInputStream(file)) {
             System.out.println("[INFO] Read " + fis.read(header, 0, HEADER_SIZE) + " bytes from the song file");
