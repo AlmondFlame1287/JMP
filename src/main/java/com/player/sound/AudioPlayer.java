@@ -10,7 +10,6 @@ import javax.sound.sampled.*;
 import javax.sound.sampled.DataLine.Info;
 
 import static javax.sound.sampled.AudioSystem.getAudioInputStream;
-import static javax.sound.sampled.AudioFormat.Encoding.PCM_SIGNED;
 
 public class AudioPlayer implements Runnable {
     private static AudioPlayer instance;
@@ -21,6 +20,10 @@ public class AudioPlayer implements Runnable {
     private static long bytesWrittenToLine;
     private static HeaderExtractor extractor;
     private static int oldPercent = 50;
+
+    private static long dataSize;
+    private static int durationInSeconds;
+    private static int bytesPerSecond;
 
     private AudioPlayer() {
         bytesWrittenToLine = 0;
@@ -47,6 +50,14 @@ public class AudioPlayer implements Runnable {
         bytesWrittenToLine = 0; // Reset the number of bytesWritten so that when selecting a new song, we don't skip said bytes
         AudioPlayer.file = file;
         extractor = selectExtractor(file);
+
+        extractData();
+    }
+
+    private static void extractData() {
+        dataSize = extractor.getDataSize();
+        durationInSeconds = extractor.getDurationInSeconds();
+        bytesPerSecond = extractor.getBytesPerSecond();
     }
 
     public static boolean isFileSet() {
@@ -109,9 +120,9 @@ public class AudioPlayer implements Runnable {
      * @return a new format, same as the one from the input
      */
     private AudioFormat getOutFormat(AudioFormat inFormat) {
-        final int ch = inFormat.getChannels();
+        final int ch = extractor.getNumberOfChannels();
         final float rate = inFormat.getSampleRate();
-        return new AudioFormat(PCM_SIGNED, rate, 16, ch, ch * 2, rate, false);
+        return new AudioFormat(extractor.getAudioEncoding(), rate, extractor.getBitsPerSample(), ch, ch * 2, rate, false);
     }
 
     /**
@@ -124,7 +135,7 @@ public class AudioPlayer implements Runnable {
         long bytesSkipped = in.skip(bytesWrittenToLine);
         System.out.println("Bytes skipped: " + bytesSkipped);
 
-        final byte[] buffer = new byte[extractor.getBytesPerSecond()]; // A middle-buffer that's the same size as the line buffer
+        final byte[] buffer = new byte[bytesPerSecond]; // A middle-buffer that's the same size as the line buffer
         for (int i = 0; i != -1; i = in.read(buffer, 0, buffer.length)) { // Read buffer.length bytes into buffer, with an offset of 0
             bytesWrittenToLine += line.write(buffer, 0, i); // Write the data i bytes from buffer to the line with an offset of 0
                                                                 // Once we have the number of bytes actually written,
@@ -134,14 +145,14 @@ public class AudioPlayer implements Runnable {
     }
 
     public static int getSongDurationInSeconds() {
-        return extractor.getDurationInSeconds();
+        return durationInSeconds;
     }
 
     public static long getDataSize() {
-        return extractor.getDataSize();
+        return dataSize;
     }
 
     public static int getBytesPerSecond() {
-        return extractor.getBytesPerSecond();
+        return bytesPerSecond;
     }
 }
