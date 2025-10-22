@@ -7,6 +7,8 @@ import com.player.gui.customs.Slider;
 import com.player.gui.customs.TransparentButton;
 import com.player.gui.dialogs.SettingsDialog;
 import com.player.sound.AudioPlayer;
+import com.player.sound.SongStatus;
+import com.player.sound.SongStatusObserver;
 import com.player.utils.SettingsParser;
 
 import javax.swing.*;
@@ -18,7 +20,7 @@ import java.util.concurrent.Executors;
 import static com.player.utils.Constants.*;
 import static com.player.utils.Constants.F_HEIGHT;
 
-public class SongViewPanel extends JPanel {
+public class SongViewPanel extends JPanel implements SongStatusObserver {
     private final JButton pausePlay;
     private final JLabel songCurrentlyPlaying;
     private final ExecutorService executor;
@@ -41,6 +43,7 @@ public class SongViewPanel extends JPanel {
         this.currentSongPosition = new JLabel("0:00");
         this.songCurrentlyPlaying = new JLabel();
         this.songDuration = new JLabel();
+        AudioPlayer.addObserver(this);
 
         this.setName("song");
         this.setPreferredSize(new Dimension(SVP_WIDTH, F_HEIGHT));
@@ -114,21 +117,13 @@ public class SongViewPanel extends JPanel {
     }
 
     private void addButtonListeners(TransparentButton prev, TransparentButton next) {
-        next.addActionListener(evt -> {
-            stop();
-            setToPlay(nextSong, nextSongIndx);
-            start();
-        });
-
-        prev.addActionListener(evt -> {
-            stop();
-            setToPlay(prevSong, prevSongIndx);
-            start();
-        });
+        next.addActionListener(evt -> playNext());
+        prev.addActionListener(evt -> playPrevious());
 
         this.pausePlay.addActionListener(evt -> {
-            if(AudioPlayer.isPlaying()) {
-                stop();
+//            if(AudioPlayer.isPlaying()) {
+            if(AudioPlayer.getStatus() == SongStatus.PLAYING) {
+                pause();
                 return;
             }
             start();
@@ -175,8 +170,8 @@ public class SongViewPanel extends JPanel {
         this.pausePlay.setText("Pause");
     }
 
-    private void stop() {
-        AudioPlayer.getInstance().kill();
+    private void pause() { // kill(boolean shouldStop)
+        AudioPlayer.getInstance().pauseSong();
         this.pausePlay.setText("Play");
     }
 
@@ -185,7 +180,7 @@ public class SongViewPanel extends JPanel {
             @Override
             protected Void doInBackground() throws Exception {
                 // (read_size / total_song_size) * 100
-                while(AudioPlayer.isPlaying()) {
+                while(AudioPlayer.getStatus() == SongStatus.PLAYING) {
                     SwingUtilities.invokeLater(() -> updateSongPercentage());
 
                     if(songPercentage.getValue() == 100) return null;
@@ -210,5 +205,23 @@ public class SongViewPanel extends JPanel {
         String songPercentagePosition = currentSongMinutes + ":" + ((currentSongSeconds < 10) ? "0" + currentSongSeconds : currentSongSeconds);
 
         currentSongPosition.setText(songPercentagePosition);
+    }
+
+    private void playNext() {
+        pause();
+        setToPlay(nextSong, nextSongIndx);
+        start();
+    }
+
+    private void playPrevious() {
+        pause();
+        setToPlay(prevSong, prevSongIndx);
+        start();
+    }
+
+    @Override
+    public void statusChanged(SongStatus newStatus) {
+        if(newStatus == SongStatus.ENDED)
+            playNext();
     }
 }
