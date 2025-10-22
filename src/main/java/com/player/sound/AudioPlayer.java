@@ -5,6 +5,8 @@ import com.player.sound.extractors.WavExtractor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.*;
 import javax.sound.sampled.DataLine.Info;
@@ -15,7 +17,8 @@ public class AudioPlayer implements Runnable {
     private static AudioPlayer instance;
     private static File file;
     private SourceDataLine line;
-    private static boolean playing;
+//    private static boolean playing;
+    private static SongStatus status;
     private static FloatControl volumeControl;
     private static long bytesWrittenToLine;
     private static HeaderExtractor extractor;
@@ -25,8 +28,11 @@ public class AudioPlayer implements Runnable {
     private static int durationInSeconds;
     private static int bytesPerSecond;
 
+    private static final List<SongStatusObserver> observers = new ArrayList<>(2);
+
     private AudioPlayer() {
         bytesWrittenToLine = 0;
+        setStatus(SongStatus.NONE);
     }
 
     public static AudioPlayer getInstance() {
@@ -36,13 +42,13 @@ public class AudioPlayer implements Runnable {
         return instance;
     }
 
-    public static boolean isPlaying() {
-        return playing;
+    public static SongStatus getStatus() {
+        return status;
     }
 
     @Override
     public void run() {
-        playing = true;
+        setStatus(SongStatus.PLAYING);
         this.play();
     }
 
@@ -50,6 +56,7 @@ public class AudioPlayer implements Runnable {
         bytesWrittenToLine = 0; // Reset the number of bytesWritten so that when selecting a new song, we don't skip said bytes
         AudioPlayer.file = file;
         extractor = selectExtractor(file);
+        setStatus(SongStatus.NONE);
 
         extractData();
     }
@@ -70,11 +77,18 @@ public class AudioPlayer implements Runnable {
         return new WavExtractor(file);
     }
 
-    public void kill() {
+    public void pauseSong() {
+        line.stop();
+        setStatus(SongStatus.PAUSED);
+    }
+
+    // Use this to completely stop the song (start from the beginning)
+    public void stop() {
         line.stop();
         line.drain();
         line.close();
-        playing = false;
+        setStatus(SongStatus.STOPPED);
+        bytesWrittenToLine = 0;
         Thread.currentThread().interrupt();
     }
 
@@ -95,6 +109,18 @@ public class AudioPlayer implements Runnable {
         } catch (LineUnavailableException | IOException | UnsupportedAudioFileException unlioe) {
             throw new IllegalStateException(unlioe);
         }
+    }
+
+    public static void addObserver(SongStatusObserver obs) {
+        observers.add(obs);
+    }
+
+    public static void setStatus(SongStatus newStatus) {
+        status = newStatus;
+
+        System.out.println("New song status: " + status);
+
+        observers.forEach(obs -> obs.statusChanged(status));
     }
 
     public static long getBytesWrittenToLine() {
@@ -132,8 +158,7 @@ public class AudioPlayer implements Runnable {
      * @throws IOException when the line can't be written to
      */
     private void stream(AudioInputStream in, SourceDataLine line) throws IOException {
-        long bytesSkipped = in.skip(bytesWrittenToLine);
-        System.out.println("Bytes skipped: " + bytesSkipped);
+        in.skip(bytesWrittenToLine);
 
         final byte[] buffer = new byte[bytesPerSecond]; // A middle-buffer that's the same size as the line buffer
         for (int i = 0; i != -1; i = in.read(buffer, 0, buffer.length)) { // Read buffer.length bytes into buffer, with an offset of 0
@@ -141,7 +166,12 @@ public class AudioPlayer implements Runnable {
                                                                 // Once we have the number of bytes actually written,
                                                                 // we can skip that same amount of bytes next time we
                                                                 // start the stream
+            System.out.println("BytesWrittenToLine: " + bytesWrittenToLine + "\n " +
+                    "Complete Data Size:" + dataSize);
         }
+
+        if(dataSize == bytesWrittenToLine)
+            setStatus(SongStatus.ENDED);
     }
 
     public static int getSongDurationInSeconds() {
