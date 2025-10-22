@@ -174,6 +174,7 @@ public class SongViewPanel extends JPanel implements SongStatusObserver {
         this.pausePlay.setText("Play");
     }
 
+    @SuppressWarnings("BusyWait")
     private SwingWorker<Void, Void> getProgressBarWorker() {
         return new SwingWorker<Void, Void>() {
             @Override
