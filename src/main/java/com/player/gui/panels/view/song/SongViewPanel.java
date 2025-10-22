@@ -121,7 +121,6 @@ public class SongViewPanel extends JPanel implements SongStatusObserver {
         prev.addActionListener(evt -> playPrevious());
 
         this.pausePlay.addActionListener(evt -> {
-//            if(AudioPlayer.isPlaying()) {
             if(AudioPlayer.getStatus() == SongStatus.PLAYING) {
                 pause();
                 return;
